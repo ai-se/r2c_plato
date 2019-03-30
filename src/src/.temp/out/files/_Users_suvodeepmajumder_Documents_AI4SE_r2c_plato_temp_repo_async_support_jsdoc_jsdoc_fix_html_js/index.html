@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - /Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/jsdoc/jsdoc-fix-html.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/jsdoc/jsdoc-fix-html.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">75.53</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">207</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">28.26</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.33</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">var async = require(&#039;../../dist/async&#039;);
+var fs = require(&#039;fs-extra&#039;);
+var path = require(&#039;path&#039;);
+
+var $ = require(&#039;cheerio&#039;);
+var _ = require(&#039;lodash&#039;);
+
+var VERSION = require(&#039;../../package.json&#039;).version;
+var docsDir = path.join(__dirname, &#039;../../docs&#039;);
+var pageTitle = &#039;Methods:&#039;;
+
+var docFilename = &#039;docs.html&#039;;
+var mainModuleFile = &#039;module-async.html&#039;;
+var mainScrollableSection = &#039;#main-container&#039;;
+var sectionTitleClass = &#039;.page-title&#039;;
+
+var HTMLFileBegin = &#039;&lt;!DOCTYPE html&gt;\n&lt;html lang=&quot;en&quot;&gt;\n&lt;head&gt;\n&#039;;
+var HTMLFileHeadBodyJoin = &#039;&lt;/head&gt;\n&lt;body&gt;&#039;;
+var HTMLFileEnd = &#039;&lt;/body&gt;&#039;;
+
+var additionalFooterText = &#039; Documentation has been modified from the original. &#039; +
+    &#039; For more information, please see the &lt;a href=&quot;https://github.com/caolan/async&quot;&gt;async&lt;/a&gt; repository.&#039;;
+
+function generateHTMLFile(filename, $page, callback) {
+    var methodName = filename.match(/\/(\w+)\.js\.html$/);
+    if (methodName) {
+        var $thisMethodDocLink = $page.find(&#039;#toc&#039;).find(&#039;a[href=&quot;&#039;+docFilename+&#039;#&#039;+methodName[1]+&#039;&quot;]&#039;);
+        $thisMethodDocLink.parent().addClass(&#039;active&#039;);
+    }
+
+    // generate an HTML file from a cheerio object
+    var HTMLdata = HTMLFileBegin + $page.find(&#039;head&#039;).html()
+        + HTMLFileHeadBodyJoin + $page.find(&#039;body&#039;).html()
+        + HTMLFileEnd;
+
+    fs.writeFile(filename, HTMLdata, callback);
+}
+
+function extractModuleFiles(files) {
+    return _.filter(files, (file) =&gt; {
+        return _.startsWith(file, &#039;module&#039;) &amp;&amp; file !== mainModuleFile;
+    });
+}
+
+function combineFakeModules(files, callback) {
+    var moduleFiles = extractModuleFiles(files);
+
+    fs.readFile(path.join(docsDir, mainModuleFile), &#039;utf8&#039;, (fileErr, mainModuleData) =&gt; {
+        if (fileErr) return callback(fileErr);
+
+        var $mainPage = $(mainModuleData);
+        // each &#039;module&#039; (category) has a separate page, with all of the
+        // important information in a &#039;main&#039; div. Combine all of these divs into
+        // one on the actual module page (async)
+        async.eachSeries(moduleFiles, (file, fileCallback) =&gt; {
+            fs.readFile(path.join(docsDir, file), &#039;utf8&#039;, (err, moduleData) =&gt; {
+                if (err) return fileCallback(err);
+                var $modulePage = $(moduleData);
+                var moduleName = $modulePage.find(sectionTitleClass).text();
+                $modulePage.find(sectionTitleClass).attr(&#039;id&#039;, moduleName.toLowerCase());
+                $mainPage.find(mainScrollableSection).append($modulePage.find(mainScrollableSection).html());
+                return fileCallback();
+            });
+        }, (err) =&gt; {
+            if (err) return callback(err);
+            generateHTMLFile(path.join(docsDir, docFilename), $mainPage, callback);
+        });
+    });
+}
+
+function applyPreCheerioFixes(data) {
+
+
+    var rIncorrectCFText = /&gt;ControlFlow&lt;/g;
+    var fixedCFText = &#039;&gt;Control Flow&lt;&#039;;
+
+    var rIncorrectModuleText = /&gt;module:(\w+)\.(\w+)&lt;/g;
+
+    // the heading needs additional padding at the top so it doesn&#039;t get cutoff
+    return data
+        // for JSDoc to work, the module needs to be labelled &#039;ControlFlow&#039;, while
+        // on the page it should appear as &#039;Control Flow&#039;
+        .replace(rIncorrectCFText, fixedCFText)
+        // for return types, JSDoc doesn&#039;t allow replacing the link text, so it
+        // needs to be done here
+        .replace(rIncorrectModuleText, (match, moduleName, methodName) =&gt; {
+            return &#039;&gt;&#039;+methodName+&#039;&lt;&#039;;
+        });
+}
+
+
+function scrollSpyFix($page, $nav) {
+    // move everything into one big ul (for Bootstrap scroll-spy)
+    var $ul = $nav.children(&#039;ul&#039;);
+    $ul.addClass(&#039;nav&#039;).addClass(&#039;methods&#039;);
+    $ul.find(&#039;.methods&#039;).each(function() {
+        var $methodsList = $(this);
+        var $methods = $methodsList.find(&#039;[data-type=&quot;method&quot;]&#039;);
+        var $parentLi = $methodsList.parent();
+
+        $methodsList.remove();
+        $methods.remove();
+        $parentLi.after($methods);
+        $parentLi.addClass(&#039;toc-header&#039;);
+
+    });
+
+    $page.find(&#039;[data-type=&quot;method&quot;]&#039;).addClass(&quot;toc-method&quot;);
+
+    $page.find(&#039;[id^=&quot;.&quot;]&#039;).each(function() {
+        var $ele = $(this);
+        var id = $(this).attr(&#039;id&#039;);
+        $ele.attr(&#039;id&#039;, id.replace(&#039;.&#039;, &#039;&#039;));
+    });
+}
+
+function fixToc(file, $page, moduleFiles) {
+    // remove `async` listing from toc
+    $page.find(&#039;a[href=&quot;&#039;+mainModuleFile+&#039;&quot;]&#039;).parent().remove();
+
+    // change toc title
+    var $nav = $page.find(&#039;nav&#039;);
+    $nav.attr(&#039;id&#039;, &#039;toc&#039;);
+    $nav.children(&#039;h3&#039;).text(pageTitle);
+    $nav.children(&#039;h2&#039;).remove();
+
+    scrollSpyFix($page, $nav);
+
+    var prependFilename = (file === docFilename) ? &#039;&#039; : docFilename;
+    // make everything point to the same &#039;docs.html&#039; page
+    _.each(moduleFiles, (filename) =&gt; {
+        $page.find(&#039;[href^=&quot;&#039;+filename+&#039;&quot;]&#039;).each(function() {
+            var $ele = $(this);
+            var href = $ele.attr(&#039;href&#039;);
+
+            // category titles should sections title, while everything else
+            // points to the correct listing
+            if (href === filename) {
+                var moduleName = $ele.text().toLowerCase().replace(/\s/g, &#039;&#039;).replace(&#039;.&#039;, &#039;&#039;);
+                $ele.attr(&#039;href&#039;, prependFilename+&#039;#&#039;+moduleName);
+            } else {
+                $ele.attr(&#039;href&#039;, href.replace(filename, prependFilename).replace(&#039;#.&#039;, &#039;#&#039;));
+            }
+        });
+    });
+}
+
+function fixFooter($page) {
+    // add a note to the footer that the documentation has been modified
+    var $footer = $page.find(&#039;footer&#039;);
+    $footer.append(additionalFooterText);
+    $page.find(mainScrollableSection).append($footer);
+}
+
+function fixModuleLinks(files, callback) {
+    var moduleFiles = extractModuleFiles(files);
+
+
+    async.each(files, (file, fileCallback) =&gt; {
+        var filePath = path.join(docsDir, file);
+        fs.readFile(filePath, &#039;utf8&#039;, (err, fileData) =&gt; {
+            if (err) return fileCallback(err);
+            var $file = $(applyPreCheerioFixes(fileData));
+
+            var $vDropdown = $file.find(&#039;#version-dropdown&#039;);
+            $vDropdown.find(&#039;.dropdown-toggle&#039;).contents().get(0).data = &#039;v&#039;+VERSION+&#039; &#039;;
+            $vDropdown.find(&#039;a[href=&quot;&#039;+docFilename+&#039;&quot;]&#039;).text(&#039;v&#039;+VERSION);
+
+            fixToc(file, $file, moduleFiles);
+            fixFooter($file);
+            $file.find(&#039;[href=&quot;&#039;+mainModuleFile+&#039;&quot;]&#039;).attr(&#039;href&#039;, docFilename);
+            generateHTMLFile(filePath, $file, fileCallback);
+        });
+    }, callback);
+}
+
+fs.copySync(path.join(__dirname, &#039;../../dist/async.js&#039;), path.join(docsDir, &#039;scripts/async.js&#039;), { clobber: true });
+fs.copySync(path.join(__dirname, &#039;./jsdoc-custom.js&#039;), path.join(docsDir, &#039;scripts/jsdoc-custom.js&#039;), { clobber: true });
+fs.copySync(path.join(__dirname, &#039;..&#039;, &#039;..&#039;, &#039;logo&#039;, &#039;favicon.ico&#039;), path.join(docsDir, &#039;favicon.ico&#039;), { clobber: true });
+fs.copySync(path.join(__dirname, &#039;..&#039;, &#039;..&#039;, &#039;logo&#039;, &#039;async-logo.svg&#039;), path.join(docsDir, &#039;img&#039;, &#039;async-logo.svg&#039;), { clobber: true });
+
+fs.readdir(docsDir, (readErr, files) =&gt; {
+    if (readErr) { throw readErr; }
+
+    var HTMLFiles = _.filter(files, (file) =&gt; {
+        return path.extname(file) === &#039;.html&#039;;
+    });
+
+    async.waterfall([
+        function(callback) {
+            combineFakeModules(HTMLFiles, (err) =&gt; {
+                if (err) return callback(err);
+                HTMLFiles.push(docFilename);
+                return callback(null);
+            });
+        },
+        async.asyncify(() =&gt; {
+            HTMLFiles.push(docFilename)
+        }),
+        function(callback) {
+            fixModuleLinks(HTMLFiles, callback);
+        }
+    ], (err) =&gt; {
+        if (err) throw err;
+        console.log(&#039;Docs generated successfully&#039;);
+    });
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

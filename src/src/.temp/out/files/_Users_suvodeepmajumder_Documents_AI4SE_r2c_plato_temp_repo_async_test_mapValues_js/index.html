@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - /Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/mapValues.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/mapValues.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">77.59</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">152</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">48.56</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.26</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">var async = require(&#039;../lib&#039;);
+var {expect} = require(&#039;chai&#039;);
+
+describe(&#039;mapValues&#039;, () =&gt; {
+    var obj = {a: 1, b: 2, c: 3, d: 4};
+
+    context(&#039;mapValuesLimit&#039;, () =&gt; {
+        it(&#039;basics&#039;, (done) =&gt; {
+            var running = 0;
+            var concurrency = {
+                a: 2,
+                b: 2,
+                c: 2,
+                d: 1
+            };
+            async.mapValuesLimit(obj, 2, (val, key, next) =&gt; {
+                running++;
+                async.setImmediate(() =&gt; {
+                    expect(running).to.equal(concurrency[key]);
+                    running--;
+                    next(null, key + val);
+                });
+            }, (err, result) =&gt; {
+                expect(running).to.equal(0);
+                expect(err).to.eql(null);
+                expect(result).to.eql({a: &#039;a1&#039;, b: &#039;b2&#039;, c: &#039;c3&#039;, d: &#039;d4&#039;});
+                done();
+            });
+        });
+
+        it(&#039;error&#039;, (done) =&gt; {
+            async.mapValuesLimit(obj, 1, (val, key, next) =&gt; {
+                if (key === &#039;b&#039;) {
+                    return next(new Error(&quot;fail&quot;));
+                }
+                next(null, val);
+            }, (err, result) =&gt; {
+                expect(err).to.not.eql(null);
+                expect(result).to.eql({a: 1});
+                done();
+            });
+        });
+
+        it(&#039;canceled&#039;, (done) =&gt; {
+            var callOrder = [];
+            async.mapValuesLimit(obj, 2, (val, key, next) =&gt; {
+                callOrder.push(val, key);
+                async.setImmediate(() =&gt; {
+                    if (key === &#039;b&#039;) {
+                        return next(false);
+                    }
+                    next(null, val);
+                });
+            }, () =&gt; {
+                throw new Error(&#039;should not get here&#039;);
+            });
+
+            setTimeout(() =&gt; {
+                expect(callOrder).to.eql([1, &#039;a&#039;, 2, &#039;b&#039;, 3, &#039;c&#039;]);
+                done();
+            }, 50);
+        });
+    });
+
+    context(&#039;mapValues&#039;, () =&gt; {
+        it(&#039;basics&#039;, (done) =&gt; {
+            var running = 0;
+            var concurrency = {
+                a: 4,
+                b: 3,
+                c: 2,
+                d: 1
+            };
+            async.mapValues(obj, (val, key, next) =&gt; {
+                running++;
+                async.setImmediate(() =&gt; {
+                    expect(running).to.equal(concurrency[key]);
+                    running--;
+                    next(null, key + val);
+                });
+            }, (err, result) =&gt; {
+                expect(running).to.equal(0);
+                expect(err).to.eql(null);
+                expect(result).to.eql({a: &#039;a1&#039;, b: &#039;b2&#039;, c: &#039;c3&#039;, d: &#039;d4&#039;});
+                done();
+            });
+        });
+
+        it(&#039;canceled&#039;, (done) =&gt; {
+            var callOrder = [];
+            async.mapValues(obj, (val, key, next) =&gt; {
+                callOrder.push(val, key);
+                if (key === &#039;b&#039;) {
+                    return next(false, val);
+                }
+                next(null, val);
+            }, () =&gt; {
+                throw new Error(&#039;should not get here&#039;);
+            });
+
+            setTimeout(() =&gt; {
+                expect(callOrder).to.eql([1, &#039;a&#039;, 2, &#039;b&#039;]);
+                done();
+            }, 25);
+        });
+    });
+
+    context(&#039;mapValuesSeries&#039;, () =&gt; {
+        it(&#039;basics&#039;, (done) =&gt; {
+            var running = 0;
+            var concurrency = {
+                a: 1,
+                b: 1,
+                c: 1,
+                d: 1
+            };
+            async.mapValuesSeries(obj, (val, key, next) =&gt; {
+                running++;
+                async.setImmediate(() =&gt; {
+                    expect(running).to.equal(concurrency[key]);
+                    running--;
+                    next(null, key + val);
+                });
+            }, (err, result) =&gt; {
+                expect(running).to.equal(0);
+                expect(err).to.eql(null);
+                expect(result).to.eql({a: &#039;a1&#039;, b: &#039;b2&#039;, c: &#039;c3&#039;, d: &#039;d4&#039;});
+                done();
+            });
+        });
+
+        it(&#039;canceled&#039;, (done) =&gt; {
+            var callOrder = [];
+            async.mapValuesSeries(obj, (val, key, next) =&gt; {
+                callOrder.push(val, key);
+                async.setImmediate(() =&gt; {
+                    if (key === &#039;b&#039;) {
+                        return next(false, val);
+                    }
+                    next(null, val);
+                });
+            }, () =&gt; {
+                throw new Error(&#039;should not get here&#039;);
+            });
+
+            setTimeout(() =&gt; {
+                expect(callOrder).to.eql([1, &#039;a&#039;, 2, &#039;b&#039;]);
+                done();
+            }, 50);
+        });
+    });
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

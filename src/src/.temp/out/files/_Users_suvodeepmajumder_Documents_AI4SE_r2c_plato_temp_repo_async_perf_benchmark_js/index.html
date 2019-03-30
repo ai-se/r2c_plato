@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - /Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/perf/benchmark.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/perf/benchmark.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">72.56</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">224</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">38.67</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.49</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">//#!/usr/bin/env node
+
+var _ = require(&quot;lodash&quot;);
+var Benchmark = require(&quot;benchmark&quot;);
+var {exec, execSync} = require(&quot;child_process&quot;);
+var fs = require(&quot;fs&quot;);
+var path = require(&quot;path&quot;);
+var mkdirp = require(&quot;mkdirp&quot;);
+var async = require(&quot;../&quot;);
+var suiteConfigs = require(&quot;./suites&quot;);
+var semver = require(&quot;semver&quot;);
+
+var args = require(&quot;yargs&quot;)
+    .usage(&quot;Usage: $0 [options] [tag1] [tag2]&quot;)
+    .describe(&quot;g&quot;, &quot;run only benchmarks whose names match this regex&quot;)
+    .alias(&quot;g&quot;, &quot;grep&quot;)
+    .default(&quot;g&quot;, &quot;.*&quot;)
+    .describe(&quot;i&quot;, &quot;skip benchmarks whose names match this regex&quot;)
+    .alias(&quot;i&quot;, &quot;reject&quot;)
+    .default(&quot;i&quot;, &quot;^$&quot;)
+    .describe(&quot;l&quot;, &quot;maximum running time per test (in seconds)&quot;)
+    .alias(&quot;l&quot;, &quot;limit&quot;)
+    .default(&quot;l&quot;, 2)
+    .help(&quot;h&quot;)
+    .alias(&quot;h&quot;, &quot;help&quot;)
+    .example(&quot;$0 0.9.2 0.9.0&quot;, &quot;Compare v0.9.2 with v0.9.0&quot;)
+    .example(&quot;$0 0.9.2&quot;, &quot;Compare v0.9.2 with the current working version&quot;)
+    .example(&quot;$0&quot;, &quot;Compare the latest tag with the current working version&quot;)
+    .example(&quot;$0 -g each&quot;, &quot;only run the each(), eachLimit() and  &quot; +
+        &quot;eachSeries() benchmarks&quot;)
+    .example(&quot;&quot;)
+    .argv;
+
+var grep = new RegExp(args.g, &quot;i&quot;);
+var reject = new RegExp(args.i, &quot;i&quot;);
+
+function getLatestVersion() {
+    var tags = execSync(&quot;git tag&quot;);
+    var latest = _(tags).split(&quot;\n&quot;)
+        .compact()
+        .sort(semver.gt)
+        .last();
+    console.log(&quot;Latest tag is &quot;, latest);
+    return latest;
+}
+
+var version0 = args._[0] || getLatestVersion();
+var version1 = args._[1] || &quot;current&quot;;
+var versionNames = [version0, version1];
+var benchOptions = {defer: true, minSamples: 1, maxTime: +args.l};
+var versions;
+var wins = {};
+var totalTime = {};
+totalTime[version0] = wins[version0] = 0;
+totalTime[version1] = wins[version1] = 0;
+
+console.log(&quot;Comparing &quot; + version0 + &quot; with &quot; + version1 +
+  &quot; on Node &quot; + process.version);
+console.log(&quot;--------------------------------------&quot;);
+
+
+async.eachSeries(versionNames, cloneVersion, (err) =&gt; {
+    if (err) { throw err; }
+    versions = versionNames.map(requireVersion);
+
+    var suites = suiteConfigs
+        .map(setDefaultOptions)
+        .reduce(handleMultipleArgs, [])
+        .map(setName)
+        .filter(matchesGrep)
+        .filter(doesNotMatch)
+        .map(createSuite);
+
+    async.eachSeries(suites, runSuite, () =&gt; {
+        var totalTime0 = +totalTime[version0].toPrecision(3);
+        var totalTime1 = +totalTime[version1].toPrecision(3);
+
+        var wins0 = wins[version0];
+        var wins1 = wins[version1];
+
+        if ( Math.abs((totalTime0 / totalTime1) - 1) &lt; 0.01) {
+            // if &lt; 1% difference, we&#039;re likely within the margins of error
+            console.log(&quot;Both versions are about equal &quot; +
+                &quot;(&quot; + totalTime0 + &quot;ms total vs. &quot; + totalTime1  + &quot;ms total)&quot;);
+        } else if (totalTime0 &lt; totalTime1) {
+            console.log(version0 + &quot; faster overall &quot; +
+                &quot;(&quot; + totalTime0 + &quot;ms total vs. &quot; + totalTime1  + &quot;ms total)&quot;);
+        } else if (totalTime1 &lt; totalTime0) {
+            console.log(version1 + &quot; faster overall &quot; +
+                &quot;(&quot; + totalTime1 + &quot;ms total vs. &quot; + totalTime0  + &quot;ms total)&quot;);
+        }
+
+        if (wins0 &gt; wins1) {
+            console.log(version0 + &quot; won more benchmarks &quot; +
+                &quot;(&quot; + wins0 + &quot; vs. &quot; + wins1  + &quot;)&quot;);
+        } else if (wins1 &gt; wins0) {
+            console.log(version1 + &quot; won more benchmarks &quot; +
+                &quot;(&quot; + wins1 + &quot; vs. &quot; + wins0  + &quot;)&quot;);
+        } else {
+            console.log(&quot;Both versions won the same number of benchmarks &quot; +
+                &quot;(&quot; + wins0 + &quot; vs. &quot; + wins1  + &quot;)&quot;);
+        }
+    });
+});
+
+function runSuite(suite, callback) {
+    suite.on(&quot;complete&quot;, () =&gt; {
+        callback();
+    }).run({async: true});
+}
+
+function setDefaultOptions(suiteConfig) {
+    suiteConfig.args = suiteConfig.args || [[]];
+    suiteConfig.setup = suiteConfig.setup || function () {};
+    return suiteConfig;
+}
+
+function handleMultipleArgs(list, suiteConfig) {
+    return list.concat(suiteConfig.args.map((suiteArgs) =&gt; {
+        return _.defaults({args: suiteArgs}, suiteConfig);
+    }));
+}
+
+function setName(suiteConfig) {
+    suiteConfig.name = suiteConfig.name + &quot;(&quot; + suiteConfig.args.join(&quot;,&quot;) + &quot;)&quot;;
+    return suiteConfig;
+}
+
+function matchesGrep(suiteConfig) {
+    return !!grep.exec(suiteConfig.name);
+}
+
+function doesNotMatch(suiteConfig) {
+    return !reject.exec(suiteConfig.name);
+}
+
+function createSuite(suiteConfig) {
+    var suite = new Benchmark.Suite();
+    var errored = false;
+
+    function addBench(version, versionName) {
+        var name = suiteConfig.name + &quot; &quot; + versionName;
+
+        try {
+            suiteConfig.setup(1);
+            suiteConfig.fn(version, () =&gt; {});
+        } catch (e) {
+            console.error(name + &quot; Errored&quot;);
+            errored = true;
+            return;
+        }
+
+        var options = _.extend({
+            versionName,
+            setup() {
+                suiteConfig.setup(...suiteConfig.args);
+            },
+            onError (err) {
+                console.log(err.stack);
+            }
+        }, benchOptions);
+
+        suite.add(name, (deferred) =&gt; {
+            suiteConfig.fn(version, () =&gt; {
+                deferred.resolve();
+            });
+        }, options);
+    }
+
+    addBench(versions[0], versionNames[0]);
+    addBench(versions[1], versionNames[1]);
+
+
+    return suite.on(&#039;cycle&#039;, (event) =&gt; {
+        var mean = event.target.stats.mean * 1000;
+        console.log(event.target + &quot;, &quot; + mean.toPrecision(3) + &quot;ms per run&quot;);
+        var version = event.target.options.versionName;
+        if (errored) return;
+        totalTime[version] += mean;
+    })
+        .on(&#039;error&#039;, (err) =&gt; { console.error(err); })
+        .on(&#039;complete&#039;, function() {
+            if (!errored) {
+                var fastest = this.filter(&#039;fastest&#039;);
+                if (fastest.length === 2) {
+                    console.log(&quot;Tie&quot;);
+                } else {
+                    var winner = fastest[0].options.versionName;
+                    console.log(winner + &#039; is faster&#039;);
+                    wins[winner]++;
+                }
+            }
+            console.log(&quot;--------------------------------------&quot;);
+        });
+
+}
+
+function requireVersion(tag) {
+    if (tag === &quot;current&quot;) {
+        return async;
+    }
+
+    return require(&quot;./versions/&quot; + tag + &quot;/&quot;);
+}
+
+function cloneVersion(tag, callback) {
+    if (tag === &quot;current&quot;) return callback();
+
+    var versionDir = __dirname + &quot;/versions/&quot; + tag;
+    mkdirp.sync(versionDir);
+    fs.open(versionDir + &quot;/package.json&quot;, &quot;r&quot;, (err, handle) =&gt; {
+        if (!err) {
+            // version has already been cloned
+            return fs.close(handle, callback);
+        }
+
+        var repoPath = path.join(__dirname, &quot;..&quot;);
+
+        var cmd = &quot;git clone --branch &quot; + tag + &quot; &quot; + repoPath + &quot; &quot; + versionDir;
+
+        exec(cmd, callback);
+
+    });
+}</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

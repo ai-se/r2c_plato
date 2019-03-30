@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - /Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/priorityQueue.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/priorityQueue.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">76.60</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">278</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">48.72</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">3.00</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">var async = require(&#039;../lib&#039;);
+var {expect} = require(&#039;chai&#039;);
+
+describe(&#039;priorityQueue&#039;, () =&gt; {
+
+    it(&#039;priorityQueue&#039;, (done) =&gt; {
+        var call_order = [];
+
+        // order of completion: 2,1,4,3
+
+        var q = async.priorityQueue((task, callback) =&gt; {
+            call_order.push(&#039;process &#039; + task);
+            callback(&#039;error&#039;, &#039;arg&#039;);
+        }, 1);
+
+        q.push(1, 1.4, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            expect(q.length()).to.equal(2);
+            call_order.push(&#039;callback &#039; + 1);
+        });
+        q.push(2, 0.2, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            expect(q.length()).to.equal(3);
+            call_order.push(&#039;callback &#039; + 2);
+        });
+        q.push(3, 3.8, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            expect(q.length()).to.equal(0);
+            call_order.push(&#039;callback &#039; + 3);
+        });
+        q.push(4, 2.9, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            expect(q.length()).to.equal(1);
+            call_order.push(&#039;callback &#039; + 4);
+        });
+        expect(q.length()).to.equal(4);
+        expect(q.concurrency).to.equal(1);
+
+        q.drain = function () {
+            expect(call_order).to.eql([
+                &#039;process 2&#039;, &#039;callback 2&#039;,
+                &#039;process 1&#039;, &#039;callback 1&#039;,
+                &#039;process 4&#039;, &#039;callback 4&#039;,
+                &#039;process 3&#039;, &#039;callback 3&#039;
+            ]);
+            expect(q.concurrency).to.equal(1);
+            expect(q.length()).to.equal(0);
+            done();
+        };
+    });
+
+    it(&#039;concurrency&#039;, (done) =&gt; {
+        var call_order = [],
+            delays = [160,80,240,80];
+
+        // worker1: --2-3
+        // worker2: -1---4
+        // order of completion: 1,2,3,4
+
+        var q = async.priorityQueue((task, callback) =&gt; {
+            setTimeout(() =&gt; {
+                call_order.push(&#039;process &#039; + task);
+                callback(&#039;error&#039;, &#039;arg&#039;);
+            }, delays.splice(0,1)[0]);
+        }, 2);
+
+        q.push(1, 1.4, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            expect(q.length()).to.equal(2);
+            call_order.push(&#039;callback &#039; + 1);
+        });
+        q.push(2, 0.2, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            expect(q.length()).to.equal(1);
+            call_order.push(&#039;callback &#039; + 2);
+        });
+        q.push(3, 3.8, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            expect(q.length()).to.equal(0);
+            call_order.push(&#039;callback &#039; + 3);
+        });
+        q.push(4, 2.9, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            expect(q.length()).to.equal(0);
+            call_order.push(&#039;callback &#039; + 4);
+        });
+        expect(q.length()).to.equal(4);
+        expect(q.concurrency).to.equal(2);
+
+        q.drain = function () {
+            expect(call_order).to.eql([
+                &#039;process 1&#039;, &#039;callback 1&#039;,
+                &#039;process 2&#039;, &#039;callback 2&#039;,
+                &#039;process 3&#039;, &#039;callback 3&#039;,
+                &#039;process 4&#039;, &#039;callback 4&#039;
+            ]);
+            expect(q.concurrency).to.equal(2);
+            expect(q.length()).to.equal(0);
+            done();
+        };
+    });
+
+    it(&#039;pause in worker with concurrency&#039;, (done) =&gt; {
+        var call_order = [];
+        var q = async.priorityQueue((task, callback) =&gt; {
+            if (task.isLongRunning) {
+                q.pause();
+                setTimeout(() =&gt; {
+                    call_order.push(task.id);
+                    q.resume();
+                    callback();
+                }, 50);
+            }
+            else {
+                call_order.push(task.id);
+                setTimeout(callback, 10);
+            }
+        }, 10);
+
+        q.push({ id: 1, isLongRunning: true});
+        q.push({ id: 2 });
+        q.push({ id: 3 });
+        q.push({ id: 4 });
+        q.push({ id: 5 });
+
+        q.drain = function () {
+            expect(call_order).to.eql([1, 2, 3, 4, 5]);
+            done();
+        };
+    });
+
+    context(&#039;q.saturated(): &#039;, () =&gt; {
+        it(&#039;should call the saturated callback if tasks length is concurrency&#039;, (done) =&gt; {
+            var calls = [];
+            var q = async.priorityQueue((task, cb) =&gt; {
+                calls.push(&#039;process &#039; + task);
+                async.setImmediate(cb);
+            }, 4);
+            q.saturated = function() {
+                calls.push(&#039;saturated&#039;);
+            };
+            q.empty = function() {
+                expect(calls.indexOf(&#039;saturated&#039;)).to.be.above(-1);
+                setTimeout(() =&gt; {
+                    expect(calls).eql([
+                        &#039;process foo4&#039;,
+                        &#039;process foo3&#039;,
+                        &#039;process foo2&#039;,
+                        &quot;saturated&quot;,
+                        &#039;process foo1&#039;,
+                        &#039;foo4 cb&#039;,
+                        &quot;saturated&quot;,
+                        &#039;process foo0&#039;,
+                        &#039;foo3 cb&#039;,
+                        &#039;foo2 cb&#039;,
+                        &#039;foo1 cb&#039;,
+                        &#039;foo0 cb&#039;
+                    ]);
+                    done();
+                }, 50);
+            };
+            q.push(&#039;foo0&#039;, 5, () =&gt; {calls.push(&#039;foo0 cb&#039;);});
+            q.push(&#039;foo1&#039;, 4, () =&gt; {calls.push(&#039;foo1 cb&#039;);});
+            q.push(&#039;foo2&#039;, 3, () =&gt; {calls.push(&#039;foo2 cb&#039;);});
+            q.push(&#039;foo3&#039;, 2, () =&gt; {calls.push(&#039;foo3 cb&#039;);});
+            q.push(&#039;foo4&#039;, 1, () =&gt; {calls.push(&#039;foo4 cb&#039;);});
+        });
+    });
+
+    context(&#039;q.unsaturated(): &#039;,() =&gt; {
+        it(&#039;should have a default buffer property that equals 25% of the concurrenct rate&#039;, (done) =&gt; {
+            var calls = [];
+            var q = async.priorityQueue((task, cb) =&gt; {
+                // nop
+                calls.push(&#039;process &#039; + task);
+                async.setImmediate(cb);
+            }, 10);
+            expect(q.buffer).to.equal(2.5);
+            done();
+        });
+
+        it(&#039;should allow a user to change the buffer property&#039;, (done) =&gt; {
+            var calls = [];
+            var q = async.priorityQueue((task, cb) =&gt; {
+                // nop
+                calls.push(&#039;process &#039; + task);
+                async.setImmediate(cb);
+            }, 10);
+            q.buffer = 4;
+            expect(q.buffer).to.not.equal(2.5);
+            expect(q.buffer).to.equal(4);
+            done();
+        });
+
+        it(&#039;should call the unsaturated callback if tasks length is less than concurrency minus buffer&#039;, (done) =&gt; {
+            var calls = [];
+            var q = async.priorityQueue((task, cb) =&gt; {
+                calls.push(&#039;process &#039; + task);
+                setTimeout(cb, 10);
+            }, 4);
+            q.unsaturated = function() {
+                calls.push(&#039;unsaturated&#039;);
+            };
+            q.empty = function() {
+                expect(calls.indexOf(&#039;unsaturated&#039;)).to.be.above(-1);
+                setTimeout(() =&gt; {
+                    expect(calls).eql([
+                        &#039;process foo4&#039;,
+                        &#039;process foo3&#039;,
+                        &#039;process foo2&#039;,
+                        &#039;process foo1&#039;,
+                        &#039;foo4 cb&#039;,
+                        &#039;unsaturated&#039;,
+                        &#039;process foo0&#039;,
+                        &#039;foo3 cb&#039;,
+                        &#039;unsaturated&#039;,
+                        &#039;foo2 cb&#039;,
+                        &#039;unsaturated&#039;,
+                        &#039;foo1 cb&#039;,
+                        &#039;unsaturated&#039;,
+                        &#039;foo0 cb&#039;,
+                        &#039;unsaturated&#039;
+                    ]);
+                    done();
+                }, 50);
+            };
+            q.push(&#039;foo0&#039;, 5, () =&gt; {calls.push(&#039;foo0 cb&#039;);});
+            q.push(&#039;foo1&#039;, 4, () =&gt; {calls.push(&#039;foo1 cb&#039;);});
+            q.push(&#039;foo2&#039;, 3, () =&gt; {calls.push(&#039;foo2 cb&#039;);});
+            q.push(&#039;foo3&#039;, 2, () =&gt; {calls.push(&#039;foo3 cb&#039;);});
+            q.push(&#039;foo4&#039;, 1, () =&gt; {calls.push(&#039;foo4 cb&#039;);});
+        });
+    });
+    
+    it(&#039;should not call the drain callback if receives empty push and tasks are still pending&#039;, (done) =&gt; {
+        var call_order = [];
+
+        var q = async.priorityQueue((task, callback) =&gt; {
+            call_order.push(&#039;process &#039; + task);
+            callback(&#039;error&#039;, &#039;arg&#039;);
+        }, 1);
+        
+        q.push(1, 1, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            call_order.push(&#039;callback &#039; + 1);
+        });
+        
+        q.push(2, 1, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            call_order.push(&#039;callback &#039; + 2);
+        });
+        
+        expect(q.length()).to.equal(2);
+        
+        q.drain = function () {
+            expect(call_order).to.eql([
+                &#039;process 1&#039;, &#039;callback 1&#039;,
+                &#039;process 2&#039;, &#039;callback 2&#039;
+            ]);
+            expect(q.concurrency).to.equal(1);
+            expect(q.length()).to.equal(0);
+            expect(q.running()).to.equal(0);
+            done();
+        };
+        
+        q.push([], 1, () =&gt; {});
+    });
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

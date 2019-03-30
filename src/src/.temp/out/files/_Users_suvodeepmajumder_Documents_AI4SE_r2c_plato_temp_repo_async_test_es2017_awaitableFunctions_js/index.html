@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - /Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/es2017/awaitableFunctions.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/es2017/awaitableFunctions.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">76.47</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">579</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">92.87</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">9.90</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">var async = require(&#039;../../lib&#039;);
+const {expect} = require(&#039;chai&#039;);
+const {default: wrapAsync} = require(&#039;../../lib/internal/wrapAsync&#039;)
+
+
+module.exports = function () {
+    async function asyncIdentity(val) {
+        var res = await Promise.resolve(val);
+        return res;
+    }
+
+    const input = [1, 2, 3];
+    const inputObj = {a: 1, b: 2, c: 3};
+
+    it(&#039;asyncify should not add an additional level of wrapping&#039;, () =&gt; {
+        const wrapped = wrapAsync(async.each)
+        let sameStack = false
+        wrapped([1], (val, cb) =&gt; cb(), () =&gt; {sameStack = true})
+        expect(sameStack).to.equal(true)
+    })
+
+    it(&#039;should throw as expected (async)&#039;, async () =&gt; {
+        try {
+            await async.each(input, async val =&gt; { throw new Error(val) });
+        } catch (e) {
+            var thrown = e
+        }
+        expect(thrown).to.be.an(&#039;error&#039;)
+    });
+
+    it(&#039;should throw as expected (callback)&#039;, async () =&gt; {
+        let thrown
+        await async.each(input, (val) =&gt; {
+            throw new Error(val)
+        }).catch(e =&gt; {thrown = e})
+        expect(thrown).to.be.an(&#039;error&#039;)
+    })
+
+    it(&#039;should throw as expected (callback, try/catch)&#039;, async () =&gt; {
+        try {
+            await async.each(input, (val, cb) =&gt; { cb(new Error(val)) });
+        } catch (e) {
+            var thrown = e
+        }
+        expect(thrown).to.be.an(&#039;error&#039;)
+    });
+
+    /*
+     * Collections
+     */
+
+    it(&#039;should return a Promise: each&#039;, async () =&gt; {
+        expect (async.each.name).to.contain(&#039;each&#039;)
+        const calls = []
+        await async.each(input, async val =&gt; { calls.push(val) });
+        expect(calls).to.eql([1, 2, 3])
+        expect(async.each(input, asyncIdentity) instanceof Promise).to.equal(true)
+    });
+    it(&#039;should return a Promise: eachSeries&#039;, async () =&gt; {
+        expect (async.eachSeries.name).to.contain(&#039;eachSeries&#039;)
+        const calls = []
+        await async.eachSeries(input, async val =&gt; { calls.push(val) });
+        expect(calls).to.eql([1, 2, 3])
+    });
+    it(&#039;should return a Promise: eachLimit&#039;, async () =&gt; {
+        expect (async.eachLimit.name).to.contain(&#039;eachLimit&#039;)
+        const calls = []
+        await async.eachLimit(input, 1, async val =&gt; { calls.push(val) });
+        expect(calls).to.eql([1, 2, 3])
+    });
+
+    it(&#039;should return a Promise: eachOf&#039;, async () =&gt; {
+        expect (async.eachOf.name).to.contain(&#039;eachOf&#039;)
+        const calls = []
+        await async.eachOf(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1, &#039;a&#039;], [2, &#039;b&#039;], [3, &#039;c&#039;]])
+    });
+    it(&#039;should return a Promise: eachOfSeries&#039;, async () =&gt; {
+        expect (async.eachOfSeries.name).to.contain(&#039;eachOfSeries&#039;)
+        const calls = []
+        await async.eachOfSeries(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1, &#039;a&#039;], [2, &#039;b&#039;], [3, &#039;c&#039;]])
+    });
+    it(&#039;should return a Promise: eachOfLimit&#039;, async () =&gt; {
+        expect (async.eachOfLimit.name).to.contain(&#039;eachOfLimit&#039;)
+        const calls = []
+        await async.eachOfLimit(inputObj, 1, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1, &#039;a&#039;], [2, &#039;b&#039;], [3, &#039;c&#039;]])
+    });
+
+    it(&#039;should return a Promise: concat&#039;, async () =&gt; {
+        expect (async.concat.name).to.contain(&#039;concat&#039;)
+        const calls = []
+        await async.concat(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: concatSeries&#039;, async () =&gt; {
+        expect (async.concatSeries.name).to.contain(&#039;concatSeries&#039;)
+        const calls = []
+        await async.concatSeries(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: concatLimit&#039;, async () =&gt; {
+        expect (async.concatLimit.name).to.contain(&#039;concatLimit&#039;)
+        const calls = []
+        await async.concatLimit(inputObj, 1, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+
+    it(&#039;should return a Promise: detect&#039;, async () =&gt; {
+        expect (async.detect.name).to.contain(&#039;detect&#039;)
+        const calls = []
+        await async.detect(input, async (...args) =&gt; { calls.push(args); return args[0] === 3 });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: detectSeries&#039;, async () =&gt; {
+        expect (async.detectSeries.name).to.contain(&#039;detectSeries&#039;)
+        const calls = []
+        await async.detectSeries(input, async (...args) =&gt; { calls.push(args); return args[0] === 3 });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: detectLimit&#039;, async () =&gt; {
+        expect (async.detectLimit.name).to.contain(&#039;detectLimit&#039;)
+        const calls = []
+        await async.detectLimit(input, 1, async (...args) =&gt; { calls.push(args); return args[0] === 3 });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+
+    it(&#039;should return a Promise: every&#039;, async () =&gt; {
+        expect (async.every.name).to.contain(&#039;every&#039;)
+        const calls = []
+        await async.every(input, async (...args) =&gt; { calls.push(args); return args[0] !== 3 });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: everySeries&#039;, async () =&gt; {
+        expect (async.everySeries.name).to.contain(&#039;everySeries&#039;)
+        const calls = []
+        await async.everySeries(input, async (...args) =&gt; { calls.push(args); return args[0] !== 3 });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: everyLimit&#039;, async () =&gt; {
+        expect (async.everyLimit.name).to.contain(&#039;everyLimit&#039;)
+        const calls = []
+        await async.everyLimit(input, 1, async (...args) =&gt; { calls.push(args); return args[0] !== 3 });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+
+    it(&#039;should return a Promise: filter&#039;, async () =&gt; {
+        expect (async.filter.name).to.contain(&#039;filter&#039;)
+        const calls = []
+        await async.filter(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: filterSeries&#039;, async () =&gt; {
+        expect (async.filterSeries.name).to.contain(&#039;filterSeries&#039;)
+        const calls = []
+        await async.filterSeries(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: filterLimit&#039;, async () =&gt; {
+        expect (async.filterLimit.name).to.contain(&#039;filterLimit&#039;)
+        const calls = []
+        await async.filterLimit(inputObj, 1, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+
+    it(&#039;should return a Promise: groupBy&#039;, async () =&gt; {
+        expect (async.groupBy.name).to.contain(&#039;groupBy&#039;)
+        const calls = []
+        await async.groupBy(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: groupBySeries&#039;, async () =&gt; {
+        expect (async.groupBySeries.name).to.contain(&#039;groupBySeries&#039;)
+        const calls = []
+        await async.groupBySeries(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: groupByLimit&#039;, async () =&gt; {
+        expect (async.groupByLimit.name).to.contain(&#039;groupByLimit&#039;)
+        const calls = []
+        await async.groupByLimit(inputObj, 1, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+
+    it(&#039;should return a Promise: map&#039;, async () =&gt; {
+        expect (async.map.name).to.contain(&#039;map&#039;)
+        const calls = []
+        await async.map(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: mapSeries&#039;, async () =&gt; {
+        expect (async.mapSeries.name).to.contain(&#039;mapSeries&#039;)
+        const calls = []
+        await async.mapSeries(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: mapLimit&#039;, async () =&gt; {
+        expect (async.mapLimit.name).to.contain(&#039;mapLimit&#039;)
+        const calls = []
+        await async.mapLimit(inputObj, 1, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+
+    it(&#039;should return a Promise: mapValues&#039;, async () =&gt; {
+        expect (async.mapValues.name).to.contain(&#039;mapValues&#039;)
+        const calls = []
+        await async.mapValues(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1, &#039;a&#039;], [2, &#039;b&#039;], [3, &#039;c&#039;]])
+    });
+    it(&#039;should return a Promise: mapValuesSeries&#039;, async () =&gt; {
+        expect (async.mapValuesSeries.name).to.contain(&#039;mapValuesSeries&#039;)
+        const calls = []
+        await async.mapValuesSeries(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1, &#039;a&#039;], [2, &#039;b&#039;], [3, &#039;c&#039;]])
+    });
+    it(&#039;should return a Promise: mapValuesLimit&#039;, async () =&gt; {
+        expect (async.mapValuesLimit.name).to.contain(&#039;mapValuesLimit&#039;)
+        const calls = []
+        await async.mapValuesLimit(inputObj, 1, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1, &#039;a&#039;], [2, &#039;b&#039;], [3, &#039;c&#039;]])
+    });
+
+
+    it(&#039;should return a Promise: reduce&#039;, async () =&gt; {
+        expect (async.reduce.name).to.contain(&#039;reduce&#039;)
+        const calls = []
+        await async.reduce(input, 1, async (...args) =&gt; calls.push(args));
+        expect(calls).to.eql([[1, 1], [1, 2], [2, 3]])
+    });
+    it(&#039;should return a Promise: reduceRight&#039;, async () =&gt; {
+        expect (async.reduceRight.name).to.contain(&#039;reduceRight&#039;)
+        const calls = []
+        await async.reduceRight(input, 1, async (...args) =&gt; calls.push(args));
+        expect(calls).to.eql([[1, 3], [1, 2], [2, 1]])
+    });
+
+    it(&#039;should return a Promise: reject&#039;, async () =&gt; {
+        expect (async.reject.name).to.contain(&#039;reject&#039;)
+        const calls = []
+        await async.reject(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: rejectSeries&#039;, async () =&gt; {
+        expect (async.rejectSeries.name).to.contain(&#039;rejectSeries&#039;)
+        const calls = []
+        await async.rejectSeries(inputObj, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: rejectLimit&#039;, async () =&gt; {
+        expect (async.rejectLimit.name).to.contain(&#039;rejectLimit&#039;)
+        const calls = []
+        await async.rejectLimit(inputObj, 1, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+
+    it(&#039;should return a Promise: some&#039;, async () =&gt; {
+        expect (async.some.name).to.contain(&#039;some&#039;)
+        const calls = []
+        await async.some(input, async (...args) =&gt; { calls.push(args); return args[0] === 3 });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: someSeries&#039;, async () =&gt; {
+        expect (async.someSeries.name).to.contain(&#039;someSeries&#039;)
+        const calls = []
+        await async.someSeries(input, async (...args) =&gt; { calls.push(args); return args[0] === 3 });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+    it(&#039;should return a Promise: someLimit&#039;, async () =&gt; {
+        expect (async.someLimit.name).to.contain(&#039;someLimit&#039;)
+        const calls = []
+        await async.someLimit(input, 1, async (...args) =&gt; { calls.push(args); return args[0] === 3 });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+
+    it(&#039;should return a Promise: sortBy&#039;, async () =&gt; {
+        expect (async.sortBy.name).to.contain(&#039;sortBy&#039;)
+        const calls = []
+        await async.sortBy(input, async (...args) =&gt; { calls.push(args) });
+        expect(calls).to.eql([[1], [2], [3]])
+    });
+
+    it(&#039;should return a Promise: times&#039;, async () =&gt; {
+        expect (async.times.name).to.contain(&#039;times&#039;)
+        const calls = []
+        await async.times(3, async (...args) =&gt; { calls.push(args); return args[0] === 3 });
+        expect(calls).to.eql([[0], [1], [2]])
+    });
+    it(&#039;should return a Promise: timesSeries&#039;, async () =&gt; {
+        expect (async.timesSeries.name).to.contain(&#039;timesSeries&#039;)
+        const calls = []
+        await async.timesSeries(3, async (...args) =&gt; { calls.push(args); return args[0] === 3 });
+        expect(calls).to.eql([[0], [1], [2]])
+    });
+    it(&#039;should return a Promise: timesLimit&#039;, async () =&gt; {
+        expect (async.timesLimit.name).to.contain(&#039;timesLimit&#039;)
+        const calls = []
+        await async.timesLimit(3, 1, async (...args) =&gt; { calls.push(args); return args[0] === 3 });
+        expect(calls).to.eql([[0], [1], [2]])
+    });
+
+    it(&#039;should return a Promise: transform&#039;, async () =&gt; {
+        expect (async.transform.name).to.contain(&#039;transform&#039;)
+        const calls = []
+        await async.transform(inputObj, 1, async (...args) =&gt; calls.push(args));
+        expect(calls).to.eql([[1, 1, &#039;a&#039;], [1, 2, &#039;b&#039;], [1, 3, &#039;c&#039;]])
+    });
+    it(&#039;should return a Promise: transform (2 args)&#039;, async () =&gt; {
+        expect (async.transform.name).to.contain(&#039;transform&#039;)
+        const calls = []
+        await async.transform(inputObj, async (...args) =&gt; calls.push(args));
+        expect(calls).to.eql([[{}, 1, &#039;a&#039;], [{}, 2, &#039;b&#039;], [{}, 3, &#039;c&#039;]])
+    });
+
+    /*
+     * Control flow
+     */
+
+    // TODO:  figure out to do with applyEach
+
+    it(&#039;should return a Promise: auto&#039;, async () =&gt; {
+        expect (async.auto.name).to.contain(&#039;auto&#039;)
+        const calls = []
+        await async.auto({
+            async a () {
+                calls.push(&#039;a&#039;)
+                return Promise.resolve(&#039;a&#039;)
+            },
+            b: [&#039;a&#039;, &#039;c&#039;, async () =&gt; calls.push(&#039;b&#039;)],
+            async c () {
+                await Promise.resolve()
+                calls.push(&#039;c&#039;)
+                return Promise.resolve(&#039;c&#039;)
+            }
+        });
+        expect(calls).to.eql([&#039;a&#039;, &#039;c&#039;, &#039;b&#039;])
+    });
+    it(&#039;should return a Promise: autoInject&#039;, async () =&gt; {
+        expect (async.autoInject.name).to.contain(&#039;autoInject&#039;)
+        const calls = []
+        await async.autoInject({
+            async a () {
+                calls.push(&#039;a&#039;)
+                return &#039;a&#039;
+            },
+            async b(a, c) { calls.push(&#039;b&#039;); calls.push(a, c) },
+            async c () {
+                calls.push(&#039;c&#039;)
+                return &#039;c&#039;
+            }
+        }, 1);
+        expect(calls).to.eql([&#039;a&#039;, &#039;c&#039;, &#039;b&#039;, &#039;a&#039;, &#039;c&#039;])
+    });
+
+    it(&#039;should return a Promise: compose&#039;, async () =&gt; {
+        expect (async.compose.name).to.contain(&#039;compose&#039;)
+        const calls = []
+        const fn = async.compose(
+            async (...args) =&gt; calls.push(&#039;a&#039;, args),
+            async (...args) =&gt; calls.push(&#039;b&#039;, args)
+        );
+        const result = await fn(1, 2)
+        expect(calls).to.eql([&#039;b&#039;, [1, 2], &#039;a&#039;, [2]])
+        expect(result).to.eql(4)
+    });
+    it(&#039;should return a Promise: seq&#039;, async () =&gt; {
+        expect (async.seq.name).to.contain(&#039;seq&#039;)
+        const calls = []
+        const fn = async.seq(
+            async (...args) =&gt; calls.push(&#039;a&#039;, args),
+            async (...args) =&gt; calls.push(&#039;b&#039;, args)
+        );
+        const result = await fn(1, 2)
+        expect(calls).to.eql([&#039;a&#039;, [1, 2], &#039;b&#039;, [2]])
+        expect(result).to.eql(4)
+    });
+
+    it(&#039;should return a Promise: whilst&#039;, async () =&gt; {
+        expect (async.whilst.name).to.contain(&#039;whilst&#039;)
+        const calls = []
+        let counter = 0
+        await async.whilst(
+            async () =&gt; {calls.push(&#039;test&#039;, counter); return counter &lt; 5},
+            async () =&gt; { calls.push(&#039;fn&#039;); counter++ }
+        );
+        expect(calls).to.eql([
+            &#039;test&#039;, 0, &#039;fn&#039;,
+            &#039;test&#039;, 1, &#039;fn&#039;,
+            &#039;test&#039;, 2, &#039;fn&#039;,
+            &#039;test&#039;, 3, &#039;fn&#039;,
+            &#039;test&#039;, 4, &#039;fn&#039;,
+            &#039;test&#039;, 5
+        ])
+    });
+    it(&#039;should return a Promise: until&#039;, async () =&gt; {
+        expect (async.until.name).to.contain(&#039;until&#039;)
+        const calls = []
+        let counter = 0
+        await async.until(
+            async () =&gt; {calls.push(&#039;test&#039;, counter); return counter === 5},
+            async () =&gt; { calls.push(&#039;fn&#039;); counter++ }
+        );
+        expect(calls).to.eql([
+            &#039;test&#039;, 0, &#039;fn&#039;,
+            &#039;test&#039;, 1, &#039;fn&#039;,
+            &#039;test&#039;, 2, &#039;fn&#039;,
+            &#039;test&#039;, 3, &#039;fn&#039;,
+            &#039;test&#039;, 4, &#039;fn&#039;,
+            &#039;test&#039;, 5
+        ])
+    });
+    it(&#039;should return a Promise: doWhilst&#039;, async () =&gt; {
+        expect (async.doWhilst.name).to.contain(&#039;doWhilst&#039;)
+        const calls = []
+        let counter = 0
+        await async.doWhilst(
+            async () =&gt; { calls.push(&#039;fn&#039;); counter++ },
+            async () =&gt; {calls.push(&#039;test&#039;, counter); return counter &lt; 5}
+        );
+        expect(calls).to.eql([
+            &#039;fn&#039;,
+            &#039;test&#039;, 1, &#039;fn&#039;,
+            &#039;test&#039;, 2, &#039;fn&#039;,
+            &#039;test&#039;, 3, &#039;fn&#039;,
+            &#039;test&#039;, 4, &#039;fn&#039;,
+            &#039;test&#039;, 5
+        ])
+    });
+    it(&#039;should return a Promise: doUntil&#039;, async () =&gt; {
+        expect (async.doUntil.name).to.contain(&#039;doUntil&#039;)
+        const calls = []
+        let counter = 0
+        await async.doUntil(
+            async () =&gt; { calls.push(&#039;fn&#039;); counter++ },
+            async () =&gt; {calls.push(&#039;test&#039;, counter); return counter === 5}
+        );
+        expect(calls).to.eql([
+            &#039;fn&#039;,
+            &#039;test&#039;, 1, &#039;fn&#039;,
+            &#039;test&#039;, 2, &#039;fn&#039;,
+            &#039;test&#039;, 3, &#039;fn&#039;,
+            &#039;test&#039;, 4, &#039;fn&#039;,
+            &#039;test&#039;, 5
+        ])
+    });
+
+    it(&#039;should return a Promise: forever&#039;, async () =&gt; {
+        expect (async.forever.name).to.contain(&#039;forever&#039;)
+        const calls = []
+        let counter = 0
+        try {
+            await async.forever(async () =&gt; {
+                calls.push(counter)
+                counter++
+                await Promise.resolve()
+                if (counter === 5) throw new Error()
+            })
+        } catch (e) {
+            var err = e
+        }
+        expect(calls).to.eql([0, 1, 2, 3, 4])
+        expect(err).to.be.an(&#039;error&#039;)
+    });
+
+    it(&#039;should return a Promise: parallel&#039;, async () =&gt; {
+        expect (async.parallel.name).to.contain(&#039;parallel&#039;)
+        const calls = []
+        await async.parallel([
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+        ])
+        expect(calls).to.eql([1, 1, 1, 1])
+    });
+    it(&#039;should return a Promise: parallelLimit&#039;, async () =&gt; {
+        expect (async.parallelLimit.name).to.contain(&#039;parallelLimit&#039;)
+        const calls = []
+        await async.parallelLimit([
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+        ], 2)
+        expect(calls).to.eql([1, 1, 1, 1])
+    });
+    it(&#039;should return a Promise: series&#039;, async () =&gt; {
+        expect (async.series.name).to.contain(&#039;series&#039;)
+        const calls = []
+        await async.series([
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+        ], 2)
+        expect(calls).to.eql([1, 1, 1, 1])
+    });
+
+    it(&#039;should return a Promise: race&#039;, async () =&gt; {
+        expect (async.race.name).to.contain(&#039;race&#039;)
+        const calls = []
+        await async.race([
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+        ], 2)
+        expect(calls).to.eql([1, 1, 1, 1])
+    });
+
+    it(&#039;should return a Promise: retryable&#039;, async () =&gt; {
+        expect (async.retryable.name).to.contain(&#039;retryable&#039;)
+        let counter = 0
+        const calls = []
+        const fn = async.retryable(async (a, b) =&gt; {
+            calls.push(a, b)
+            counter++
+            if (counter &lt; 3) throw new Error()
+        })
+        const promise = fn(1, 2)
+        expect(promise.then).to.be.a(&#039;function&#039;)
+        await promise
+        expect(calls).to.eql([1, 2, 1, 2, 1, 2])
+    });
+    it(&#039;should return a Promise: retryable (arity 0)&#039;, async () =&gt; {
+        expect (async.retryable.name).to.contain(&#039;retryable&#039;)
+        let counter = 0
+        const calls = []
+        const fn = async.retryable({times: 5}, async () =&gt; {
+            calls.push(0)
+            counter++
+            if (counter &lt; 3) throw new Error()
+        })
+        await fn()
+        expect(calls).to.eql([0, 0, 0])
+    });
+
+    it(&#039;should return a Promise: retry&#039;, async () =&gt; {
+        expect (async.retry.name).to.contain(&#039;retry&#039;)
+        let counter = 0
+        const calls = []
+        await async.retry(async () =&gt; {
+            calls.push(counter)
+            counter++
+            if (counter &lt; 3) throw new Error()
+        })
+        expect(calls).to.eql([0, 1, 2])
+    });
+
+    it(&#039;should return a Promise: tryEach&#039;, async () =&gt; {
+        expect (async.tryEach.name).to.contain(&#039;tryEach&#039;)
+        const calls = []
+        await async.tryEach([
+            async () =&gt; { await Promise.resolve(); calls.push(1); throw new Error() },
+            async () =&gt; { await Promise.resolve(); calls.push(2); throw new Error() },
+            async () =&gt; { await Promise.resolve(); calls.push(3) },
+            async () =&gt; { await Promise.resolve(); calls.push(4) },
+        ], 2)
+        expect(calls).to.eql([1, 2, 3])
+    });
+
+    it(&#039;should return a Promise: waterfall&#039;, async () =&gt; {
+        expect (async.waterfall.name).to.contain(&#039;waterfall&#039;)
+        const calls = []
+        await async.waterfall([
+            async () =&gt; { await Promise.resolve(); calls.push(1) },
+            async () =&gt; { await Promise.resolve(); calls.push(2) },
+            async () =&gt; { await Promise.resolve(); calls.push(3) },
+            async () =&gt; { await Promise.resolve(); calls.push(4) },
+        ], 2)
+        expect(calls).to.eql([1, 2, 3, 4])
+    });
+
+    /*
+     * Util
+     */
+
+
+};</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

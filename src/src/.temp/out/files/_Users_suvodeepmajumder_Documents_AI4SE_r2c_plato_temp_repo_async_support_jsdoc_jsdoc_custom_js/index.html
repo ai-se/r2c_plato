@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - /Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/jsdoc/jsdoc-custom.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/jsdoc/jsdoc-custom.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">58.16</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">129</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">28.09</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.07</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">/* eslint no-undef: &quot;off&quot; */
+if (typeof setImmediate !== &#039;function&#039; &amp;&amp; typeof async === &#039;object&#039;) {
+    window.setImmediate = async.setImmediate;
+}
+
+$(() =&gt; {
+    function matchSubstrs(methodName) {
+        var tokens = [];
+        var len = methodName.length;
+        for (var size = 1; size &lt;= len; size++){
+            for (var i = 0; i+size&lt;= len; i++){
+                tokens.push(methodName.substr(i, size));
+            }
+        }
+        return tokens;
+    }
+
+    var methodNames = new Bloodhound({
+        datumTokenizer: matchSubstrs,
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+            url: &#039;./data/methodNames.json&#039;,
+            cache: false
+        }
+    });
+
+    var sourceFiles = new Bloodhound({
+        datumTokenizer: matchSubstrs,
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+            url: &#039;./data/sourceFiles.json&#039;,
+            cache: false
+        }
+    });
+
+    var githubIssues = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.whitespace,
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+            url: &#039;https://api.github.com/search/issues?q=%QUERY+repo:caolan/async&#039;,
+            cache: true,
+            wildcard: &#039;%QUERY&#039;,
+            transform(response) {
+                return $.map(response.items, (issue) =&gt; {
+                    // if (issue.state !== &#039;open&#039;) {
+                    //     return null;
+                    // }
+                    return {
+                        url: issue.html_url,
+                        name: issue.number + &#039;: &#039; + issue.title,
+                        number: issue.number
+                    };
+                }).sort((a, b) =&gt; {
+                    return b.number - a.number;
+                });
+            }
+        }
+    });
+
+    $(&#039;.typeahead&#039;).typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 1
+    }, {
+        name: &#039;Methods&#039;,
+        source: methodNames,
+        templates: {
+            header: &#039;&lt;h3 class=&quot;search-bar-header-first&quot;&gt;Methods&lt;/h3&gt;&#039;
+        }
+    }, {
+        name: &#039;Files&#039;,
+        source: sourceFiles,
+        templates: {
+            header: &#039;&lt;h3 class=&quot;search-bar-header&quot;&gt;Source Files&lt;/h3&gt;&#039;
+        }
+    }, {
+        name: &#039;Issues&#039;,
+        source: githubIssues,
+        display: &#039;name&#039;,
+        templates: {
+            header: &#039;&lt;h3 class=&quot;search-bar-header&quot;&gt;Issues&lt;/h3&gt;&#039;
+        }
+    }).on(&#039;typeahead:select&#039;, (ev, suggestion) =&gt; {
+        var host;
+        if (location.origin != &quot;null&quot;) {
+            host = location.origin;
+        } else {
+            host = location.protocol + &#039;//&#039; + location.host;
+        }
+
+        var _path = location.pathname.split(&quot;/&quot;);
+        var currentPage = _path[_path.length - 1];
+        host += &quot;/&quot; + _path.slice(1, -1).join(&quot;/&quot;) + &quot;/&quot;;
+
+        // handle issues
+        if (typeof suggestion !== &#039;string&#039;) {
+            location.href = suggestion.url;
+        // handle source files
+        } else if (suggestion.indexOf(&#039;.html&#039;) !== -1) {
+            location.href = host + suggestion;
+        } else {
+            var parenIndex = suggestion.indexOf(&#039;(&#039;);
+            if (parenIndex !== -1) {
+                suggestion = suggestion.substring(0, parenIndex-1);
+            }
+
+            // handle searching from one of the source files or the home page
+            if (currentPage !== &#039;docs.html&#039;) {
+                location.href = host + &#039;docs.html#&#039; + suggestion;
+            } else {
+                var $el = document.getElementById(suggestion);
+                $(&#039;#main-container&#039;).animate({ scrollTop: $el.offsetTop - 60 }, 500);
+                location.hash = &#039;#&#039;+suggestion;
+            }
+        }
+    }).focus();
+
+    function fixOldHash() {
+        var {hash} = window.location;
+        if (hash) {
+            var hashMatches = hash.match(/^#\.(\w+)$/);
+            if (hashMatches) {
+                window.location.hash = &#039;#&#039;+hashMatches[1];
+            }
+        }
+    }
+
+    fixOldHash();
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

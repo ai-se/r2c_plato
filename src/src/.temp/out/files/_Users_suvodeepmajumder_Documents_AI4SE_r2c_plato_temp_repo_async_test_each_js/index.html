@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - /Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/each.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/each.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">80.43</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">341</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">58.85</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.86</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">var async = require(&#039;../lib&#039;);
+var {expect} = require(&#039;chai&#039;);
+var assert = require(&#039;assert&#039;);
+
+describe(&quot;each&quot;, () =&gt; {
+
+    function eachIteratee(args, x, callback) {
+        setTimeout(() =&gt; {
+            args.push(x);
+            callback();
+        }, x*25);
+    }
+
+    function eachNoCallbackIteratee(done, x, callback) {
+        expect(x).to.equal(1);
+        callback();
+        done();
+    }
+
+    it(&#039;each&#039;, function(done) {
+        var args = [];
+        async.each([1,3,2], eachIteratee.bind(this, args), (err) =&gt; {
+            assert(err === null, err + &quot; passed instead of &#039;null&#039;&quot;);
+            expect(args).to.eql([1,2,3]);
+            done();
+        });
+    });
+
+    it(&#039;each extra callback&#039;, (done) =&gt; {
+        var count = 0;
+        async.each([1,3,2], (val, callback) =&gt; {
+            count++;
+            var done_ = count == 3;
+            callback();
+            assert.throws(callback);
+            if (done_) {
+                done();
+            }
+        });
+    });
+
+    it(&#039;each empty array&#039;, (done) =&gt; {
+        async.each([], (x, callback) =&gt; {
+            assert(false, &#039;iteratee should not be called&#039;);
+            callback();
+        }, (err) =&gt; {
+            if (err) throw err;
+            assert(true, &#039;should call callback&#039;);
+        });
+        setTimeout(done, 25);
+    });
+
+
+    it(&#039;each empty array, with other property on the array&#039;, (done) =&gt; {
+        var myArray = [];
+        myArray.myProp = &quot;anything&quot;;
+        async.each(myArray, (x, callback) =&gt; {
+            assert(false, &#039;iteratee should not be called&#039;);
+            callback();
+        }, (err) =&gt; {
+            if (err) throw err;
+            assert(true, &#039;should call callback&#039;);
+        });
+        setTimeout(done, 25);
+    });
+
+
+    it(&#039;each error&#039;, (done) =&gt; {
+        async.each([1,2,3], (x, callback) =&gt; {
+            callback(&#039;error&#039;);
+        }, (err) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+        });
+        setTimeout(done, 50);
+    });
+
+    it(&#039;each canceled&#039;, (done) =&gt; {
+        var call_order = [];
+        async.each([1, 2, 3], (x, callback) =&gt; {
+            call_order.push(x);
+            if (x === 2) {
+                return callback(false);
+            }
+            callback(null);
+        }, () =&gt; {
+            throw new Error(&#039;should not get here&#039;);
+        });
+
+        setTimeout(() =&gt; {
+            expect(call_order).to.eql([1, 2, 3]);
+            done();
+        }, 25);
+    });
+
+    it(&#039;each no callback&#039;, function(done) {
+        async.each([1], eachNoCallbackIteratee.bind(this, done));
+    });
+
+    it(&#039;eachSeries&#039;, function(done) {
+        var args = [];
+        async.eachSeries([1,3,2], eachIteratee.bind(this, args), (err) =&gt; {
+            assert(err === null, err + &quot; passed instead of &#039;null&#039;&quot;);
+            expect(args).to.eql([1,3,2]);
+            done();
+        });
+    });
+
+    it(&#039;eachSeries empty array&#039;, (done) =&gt; {
+        async.eachSeries([], (x, callback) =&gt; {
+            assert(false, &#039;iteratee should not be called&#039;);
+            callback();
+        }, (err) =&gt; {
+            if (err) throw err;
+            assert(true, &#039;should call callback&#039;);
+        });
+        setTimeout(done, 25);
+    });
+
+    it(&#039;eachSeries array modification&#039;, (done) =&gt; {
+        var arr = [1, 2, 3, 4];
+        async.eachSeries(arr, (x, callback) =&gt; {
+            async.setImmediate(callback);
+        }, () =&gt; {
+            assert(true, &#039;should call callback&#039;);
+        });
+
+        arr.pop();
+        arr.splice(0, 1);
+
+        setTimeout(done, 50);
+    });
+
+    // bug #782.  Remove in next major release
+    it(&#039;eachSeries single item&#039;, (done) =&gt; {
+        var sync = true;
+        async.eachSeries([1], (i, cb) =&gt; {
+            cb(null);
+        }, () =&gt; {
+            assert(sync, &quot;callback not called on same tick&quot;);
+        });
+        sync = false;
+        done();
+    });
+
+    // bug #782.  Remove in next major release
+    it(&#039;eachSeries single item&#039;, (done) =&gt; {
+        var sync = true;
+        async.eachSeries([1], (i, cb) =&gt; {
+            cb(null);
+        }, () =&gt; {
+            assert(sync, &quot;callback not called on same tick&quot;);
+        });
+        sync = false;
+        done();
+    });
+
+    it(&#039;eachSeries error&#039;, (done) =&gt; {
+        var call_order = [];
+        async.eachSeries([1,2,3], (x, callback) =&gt; {
+            call_order.push(x);
+            callback(&#039;error&#039;);
+        }, (err) =&gt; {
+            expect(call_order).to.eql([1]);
+            expect(err).to.equal(&#039;error&#039;);
+        });
+        setTimeout(done, 50);
+    });
+
+    it(&#039;eachSeries canceled&#039;, (done) =&gt; {
+        var call_order = [];
+        async.eachSeries([1, 2, 3], (x, callback) =&gt; {
+            call_order.push(x);
+            async.setImmediate(() =&gt; {
+                if (x === 2) {
+                    return callback(false);
+                }
+                callback(null);
+            });
+        }, () =&gt; {
+            throw new Error(&#039;should not get here&#039;);
+        });
+
+        setTimeout(() =&gt; {
+            expect(call_order).to.eql([1, 2]);
+            done();
+        }, 50);
+    });
+
+    it(&#039;eachSeries no callback&#039;, function(done) {
+        async.eachSeries([1], eachNoCallbackIteratee.bind(this, done));
+    });
+
+
+    it(&#039;eachLimit&#039;, (done) =&gt; {
+        var args = [];
+        var arr = [0,1,2,3,4,5,6,7,8,9];
+        async.eachLimit(arr, 2, (x,callback) =&gt; {
+            setTimeout(() =&gt; {
+                args.push(x);
+                callback();
+            }, x*5);
+        }, (err) =&gt; {
+            assert(err === null, err + &quot; passed instead of &#039;null&#039;&quot;);
+            expect(args).to.eql(arr);
+            done();
+        });
+    });
+
+    it(&#039;eachLimit empty array&#039;, (done) =&gt; {
+        async.eachLimit([], 2, (x, callback) =&gt; {
+            assert(false, &#039;iteratee should not be called&#039;);
+            callback();
+        }, (err) =&gt; {
+            if (err) throw err;
+            assert(true, &#039;should call callback&#039;);
+        });
+        setTimeout(done, 25);
+    });
+
+    it(&#039;eachLimit limit exceeds size&#039;, function(done) {
+        var args = [];
+        var arr = [0,1,2,3,4,5,6,7,8,9];
+        async.eachLimit(arr, 20, eachIteratee.bind(this, args), (err) =&gt; {
+            if (err) throw err;
+            expect(args).to.eql(arr);
+            done();
+        });
+    });
+
+    it(&#039;eachLimit limit equal size&#039;, function(done) {
+        var args = [];
+        var arr = [0,1,2,3,4,5,6,7,8,9];
+        async.eachLimit(arr, 10, eachIteratee.bind(this, args), (err) =&gt; {
+            if (err) throw err;
+            expect(args).to.eql(arr);
+            done();
+        });
+    });
+
+    it(&#039;eachLimit zero limit&#039;, () =&gt; {
+        expect(() =&gt; {
+            async.eachLimit([0,1,2,3,4,5], 0, (x, callback) =&gt; {
+                assert(false, &#039;iteratee should not be called&#039;);
+                callback();
+            }, () =&gt; {
+                assert(false, &#039;should not call callback&#039;);
+            });
+        }).to.throw(/limit/)
+    });
+
+    it(&#039;eachLimit error&#039;, (done) =&gt; {
+        var arr = [0,1,2,3,4,5,6,7,8,9];
+        var call_order = [];
+
+        async.eachLimit(arr, 3, (x, callback) =&gt; {
+            call_order.push(x);
+            if (x === 2) {
+                callback(&#039;error&#039;);
+            }
+        }, (err) =&gt; {
+            expect(call_order).to.eql([0,1,2]);
+            expect(err).to.equal(&#039;error&#039;);
+        });
+        setTimeout(done, 25);
+    });
+
+    it(&#039;eachLimit canceled&#039;, (done) =&gt; {
+        var call_order = [];
+        async.eachLimit([1, 1, 2, 2, 3], 2, (x, callback) =&gt; {
+            call_order.push(x);
+            async.setImmediate(() =&gt; {
+                if (x === 2) {
+                    return callback(false);
+                }
+                callback(null);
+            });
+        }, () =&gt; {
+            throw new Error(&#039;should not get here&#039;);
+        });
+
+        setTimeout(() =&gt; {
+            expect(call_order).to.eql([1, 1, 2, 2]);
+            done();
+        }, 50);
+    });
+
+    it(&#039;eachLimit no callback&#039;, function(done) {
+        async.eachLimit([1], 1, eachNoCallbackIteratee.bind(this, done));
+    });
+
+    it(&#039;eachLimit synchronous&#039;, (done) =&gt; {
+        var args = [];
+        var arr = [0,1,2];
+        async.eachLimit(arr, 5, (x,callback) =&gt; {
+            args.push(x);
+            callback();
+        }, (err) =&gt; {
+            if (err) throw err;
+            expect(args).to.eql(arr);
+            done();
+        });
+    });
+
+    it(&#039;eachLimit does not continue replenishing after error&#039;, (done) =&gt; {
+        var started = 0;
+        var arr = [0,1,2,3,4,5,6,7,8,9];
+        var delay = 10;
+        var limit = 3;
+        var maxTime = 10 * arr.length;
+
+        async.eachLimit(arr, limit, (x, callback) =&gt; {
+            started ++;
+            if (started === 3) {
+                return callback(new Error (&quot;Test Error&quot;));
+            }
+            setTimeout(() =&gt; {
+                callback();
+            }, delay);
+        }, () =&gt; {});
+
+        setTimeout(() =&gt; {
+            expect(started).to.equal(3);
+            done();
+        }, maxTime);
+    });
+
+    it(&#039;forEach alias&#039;, (done) =&gt; {
+        assert.strictEqual(async.each, async.forEach);
+        done();
+    });
+
+    it(&#039;forEachSeries alias&#039;, (done) =&gt; {
+        assert.strictEqual(async.eachSeries, async.forEachSeries);
+        done();
+    });
+
+    it(&#039;forEachLimit alias&#039;, (done) =&gt; {
+        assert.strictEqual(async.eachLimit, async.forEachLimit);
+        done();
+    });
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

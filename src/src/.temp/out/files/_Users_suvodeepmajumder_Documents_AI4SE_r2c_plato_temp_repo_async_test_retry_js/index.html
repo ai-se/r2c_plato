@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - /Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/retry.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/retry.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">76.18</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">278</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">80.94</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.68</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">var async = require(&#039;../lib&#039;);
+var {expect} = require(&#039;chai&#039;);
+var assert = require(&#039;assert&#039;);
+var _ = require(&#039;lodash&#039;);
+
+describe(&quot;retry&quot;, () =&gt; {
+
+    // Issue 306 on github: https://github.com/caolan/async/issues/306
+    it(&#039;retry when attempt succeeds&#039;,(done) =&gt; {
+        var failed = 3;
+        var callCount = 0;
+        var expectedResult = &#039;success&#039;;
+        function fn(callback) {
+            callCount++;
+            failed--;
+            if (!failed) callback(null, expectedResult);
+            else callback(true); // respond with error
+        }
+        async.retry(fn, (err, result) =&gt; {
+            assert(err === null, err + &quot; passed instead of &#039;null&#039;&quot;);
+            assert.equal(callCount, 3, &#039;did not retry the correct number of times&#039;);
+            assert.equal(result, expectedResult, &#039;did not return the expected result&#039;);
+            done();
+        });
+    });
+
+    it(&#039;retry when all attempts fail&#039;,(done) =&gt; {
+        var times = 3;
+        var callCount = 0;
+        var error = &#039;ERROR&#039;;
+        var erroredResult = &#039;RESULT&#039;;
+        function fn(callback) {
+            callCount++;
+            callback(error + callCount, erroredResult + callCount); // respond with indexed values
+        }
+        async.retry(times, fn, (err, result) =&gt; {
+            assert.equal(callCount, 3, &quot;did not retry the correct number of times&quot;);
+            assert.equal(err, error + times, &quot;Incorrect error was returned&quot;);
+            assert.equal(result, erroredResult + times, &quot;Incorrect result was returned&quot;);
+            done();
+        });
+    });
+
+    it(&#039;retry fails with invalid arguments&#039;,(done) =&gt; {
+        expect(() =&gt; {
+            async.retry(&quot;&quot;);
+        }).to.throw();
+        expect(() =&gt; {
+            async.retry();
+        }).to.throw();
+        expect(() =&gt; {
+            async.retry(() =&gt; {}, 2, () =&gt; {});
+        }).to.throw();
+        done();
+    });
+
+    it(&#039;retry with interval when all attempts fail&#039;,function(done) {
+        this.retries(3); // this test is flakey due to timing issues
+
+        var times = 3;
+        var interval = 50;
+        var callCount = 0;
+        var error = &#039;ERROR&#039;;
+        var erroredResult = &#039;RESULT&#039;;
+        function fn(callback) {
+            callCount++;
+            callback(error + callCount, erroredResult + callCount); // respond with indexed values
+        }
+        var start = Date.now();
+        async.retry({ times, interval}, fn, (err, result) =&gt; {
+            var duration = Date.now() - start;
+            expect(duration).to.be.above(interval * (times - 1) - times);
+            assert.equal(callCount, 3, &quot;did not retry the correct number of times&quot;);
+            assert.equal(err, error + times, &quot;Incorrect error was returned&quot;);
+            assert.equal(result, erroredResult + times, &quot;Incorrect result was returned&quot;);
+            done();
+        });
+    });
+
+    it(&#039;retry with custom interval when all attempts fail&#039;,(done) =&gt; {
+        var times = 3;
+        var retryCounts = []
+        var intervalFunc = function(retryCount) {
+            retryCounts.push(retryCount)
+            return retryCount * 100;
+        };
+        var callCount = 0;
+        var error = &#039;ERROR&#039;;
+        var erroredResult = &#039;RESULT&#039;;
+        function fn(callback) {
+            callCount++;
+            callback(error + callCount, erroredResult + callCount); // respond with indexed values
+        }
+        var start = Date.now();
+        async.retry({ times, interval: intervalFunc}, fn, (err, result) =&gt; {
+            var duration = Date.now() - start;
+            expect(duration).to.be.above(300 - times);
+            assert.equal(callCount, 3, &quot;did not retry the correct number of times&quot;);
+            assert.equal(err, error + times, &quot;Incorrect error was returned&quot;);
+            assert.equal(result, erroredResult + times, &quot;Incorrect result was returned&quot;);
+            assert.deepEqual(retryCounts, [1, 2])
+            done();
+        });
+    });
+
+    it(&quot;should not require a callback&quot;, (done) =&gt; {
+        var called = false;
+        async.retry(3, (cb) =&gt; {
+            called = true;
+            cb();
+        });
+        setTimeout(() =&gt; {
+            assert(called);
+            done();
+        }, 10);
+    });
+
+    it(&quot;should not require a callback and use the default times&quot;, (done) =&gt; {
+        var calls = 0;
+        async.retry((cb) =&gt; {
+            calls++;
+            cb(&quot;fail&quot;);
+        }).catch(() =&gt; {});
+        setTimeout(() =&gt; {
+            expect(calls).to.equal(5);
+            done();
+        }, 50);
+    });
+
+    it(&quot;should be cancelable&quot;, (done) =&gt; {
+        var calls = 0;
+        async.retry(2, (cb) =&gt; {
+            calls++;
+            cb(calls &gt; 1 ? false : &#039;fail&#039;);
+        }, () =&gt; { throw new Error(&#039;should not get here&#039;) });
+        setTimeout(() =&gt; {
+            expect(calls).to.equal(2);
+            done();
+        }, 10);
+    });
+
+    it(&#039;retry does not precompute the intervals (#1226)&#039;, (done) =&gt; {
+        var callTimes = [];
+        function intervalFunc() {
+            callTimes.push(Date.now());
+            return 100;
+        }
+        function fn(callback) {
+            callback({}); // respond with indexed values
+        }
+        async.retry({ times: 4, interval: intervalFunc}, fn, () =&gt; {
+            expect(callTimes[1] - callTimes[0]).to.be.above(90);
+            expect(callTimes[2] - callTimes[1]).to.be.above(90);
+            done();
+        });
+    });
+
+    it(&#039;retry passes all resolve arguments to callback&#039;, (done) =&gt; {
+        function fn(callback) {
+            callback(null, 1, 2, 3); // respond with indexed values
+        }
+        async.retry(5, fn, _.rest((args) =&gt; {
+            expect(args).to.be.eql([null, 1, 2, 3]);
+            done();
+        }));
+    });
+
+    // note this is a synchronous test ensuring retry is synchrnous in the fastest (most straightforward) case
+    it(&#039;retry calls fn immediately and will call callback if successful&#039;, () =&gt; {
+        function fn(callback) {
+            callback(null, {a: 1});
+        }
+        async.retry(5, fn, (err, result) =&gt; {
+            expect(result).to.be.eql({a: 1});
+        });
+    });
+
+    it(&#039;retry when all attempts fail and error continue test returns true&#039;,(done) =&gt; {
+        var times = 3;
+        var callCount = 0;
+        var error = &#039;ERROR&#039;;
+        var special = &#039;SPECIAL_ERROR&#039;;
+        var erroredResult = &#039;RESULT&#039;;
+        function fn(callback) {
+            callCount++;
+            callback(error + callCount, erroredResult + callCount);
+        }
+        function errorTest(err) {
+            return err &amp;&amp; err !== special;
+        }
+        var options = {
+            times,
+            errorFilter: errorTest
+        };
+        async.retry(options, fn, (err, result) =&gt; {
+            assert.equal(callCount, 3, &quot;did not retry the correct number of times&quot;);
+            assert.equal(err, error + times, &quot;Incorrect error was returned&quot;);
+            assert.equal(result, erroredResult + times, &quot;Incorrect result was returned&quot;);
+            done();
+        });
+    });
+
+    it(&#039;retry when some attempts fail and error test returns false at some invokation&#039;,(done) =&gt; {
+        var callCount = 0;
+        var error = &#039;ERROR&#039;;
+        var special = &#039;SPECIAL_ERROR&#039;;
+        var erroredResult = &#039;RESULT&#039;;
+        function fn(callback) {
+            callCount++;
+            var err = callCount === 2 ? special : error + callCount;
+            callback(err, erroredResult + callCount);
+        }
+        function errorTest(err) {
+            return err &amp;&amp; err === error + callCount; // just a different pattern
+        }
+        var options = {
+            errorFilter: errorTest
+        };
+        async.retry(options, fn, (err, result) =&gt; {
+            assert.equal(callCount, 2, &quot;did not retry the correct number of times&quot;);
+            assert.equal(err, special, &quot;Incorrect error was returned&quot;);
+            assert.equal(result, erroredResult + 2, &quot;Incorrect result was returned&quot;);
+            done();
+        });
+    });
+
+    it(&#039;retry with interval when some attempts fail and error test returns false at some invokation&#039;,function(done) {
+        this.retries(3); // flakey test
+
+        var interval = 50;
+        var callCount = 0;
+        var error = &#039;ERROR&#039;;
+        var erroredResult = &#039;RESULT&#039;;
+        var special = &#039;SPECIAL_ERROR&#039;;
+        var specialCount = 3;
+        function fn(callback) {
+            callCount++;
+            var err = callCount === specialCount ? special : error + callCount;
+            callback(err, erroredResult + callCount);
+        }
+        function errorTest(err) {
+            return err &amp;&amp; err !== special;
+        }
+        var start = Date.now();
+        async.retry({ interval, errorFilter: errorTest }, fn, (err, result) =&gt; {
+            var duration = Date.now() - start;
+            expect(duration).to.be.above(interval * (specialCount - 1) - specialCount);
+            assert.equal(callCount, specialCount, &quot;did not retry the correct number of times&quot;);
+            assert.equal(err, special, &quot;Incorrect error was returned&quot;);
+            assert.equal(result, erroredResult + specialCount, &quot;Incorrect result was returned&quot;);
+            done();
+        });
+    });
+
+    it(&#039;retry when first attempt succeeds and error test should not be called&#039;,(done) =&gt; {
+        var callCount = 0;
+        var error = &#039;ERROR&#039;;
+        var erroredResult = &#039;RESULT&#039;;
+        var continueTestCalled = false;
+        function fn(callback) {
+            callCount++;
+            callback(null, erroredResult + callCount);
+        }
+        function errorTest(err) {
+            continueTestCalled = true;
+            return err &amp;&amp; err === error;
+        }
+        var options = {
+            errorFilter: errorTest
+        };
+        async.retry(options, fn, _.rest((args) =&gt; {
+            assert.equal(callCount, 1, &quot;did not retry the correct number of times&quot;);
+            expect(args).to.be.eql([null, erroredResult + callCount]);
+            assert.equal(continueTestCalled, false, &quot;error test function was called&quot;);
+            done();
+        }));
+    });
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

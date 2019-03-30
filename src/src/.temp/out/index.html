@@ -1,0 +1,2384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - JavaScript Introspection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <script>
+    var __options = {"flags":{"complexity":{"commonjs":true,"logicalor":true,"switchcase":true,"forin":false,"trycatch":false,"newmi":true},"jshint":{}}}
+  </script>
+
+  <link href="assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="assets/css/plato.css" rel="stylesheet">
+  <link href="assets/css/plato-overview.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li class="active">
+        <a href="index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>JavaScript Source Analysis</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <h1 class="col-md-12">Summary</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Total/Average Lines <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code" data-original-title="SLOC" data-container="body"></i></h2>
+      <p class="stat">22410 / 129</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Average Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index" data-container="body"></i></a></h2>
+      <p class="stat">81.77</p>
+    </div>
+  </div>
+</div>
+<div class="container historical">
+  <div class="row">
+    <div class="col-md-6">
+      <div id="chart_historical_sloc" class="chart js-chart"></div>
+    </div>
+    <div class="col-md-6">
+      <div id="chart_historical_maint" class="chart js-chart"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container overview">
+  <div class="row">
+    <h2 class="col-md-12">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index" data-container="body"></i></a></h2>
+    <div class="col-md-12"><div id='chart_maintainability' class='chart js-chart'></div></div>
+  </div>
+  <div class="row">
+    <h2 class="col-md-12">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code" data-original-title="SLOC" data-container="body"></i></h2>
+    <div class="col-md-12"><div id='chart_sloc' class='chart js-chart'></div></div>
+  </div>
+  <div class="row">
+    <h2 class="col-md-12">Estimated errors in implementation <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+    <div class="col-md-12"><div id='chart_bugs' class='chart js-chart'></div></div>
+  </div>
+  
+  <div class="row">
+    <h2 class="col-md-12">Lint errors</h2>
+    <div class="col-md-12"><div id='chart_lint' class='chart js-chart'></div></div>
+  </div>
+  
+</div>
+
+<div class="container">
+  <div class="row">
+    <h1 class="col-md-12">Files</h1>
+  </div>
+
+  <div class="row">
+    <div class="span12 group-header">
+      <div class="btn-group">
+        <button type="button" id="button-complexity" class="btn btn-default complexity">complexity</button>
+        <button type="button" id="button-sloc" class="btn btn-default sloc">sloc</button>
+        <button type="button" id="button-bugs" class="btn btn-default bugs">est errors</button>
+        
+        <button type="button" id="button-lint" class="btn btn-default lint">lint errors</button>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    &nbsp;
+  </div>
+
+  <div class="row">
+    <ul class="file-list list-unstyled">
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_dist_async_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/dist/async.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="4633"
+              data-bugs="20.81"
+              data-complexity="253"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_dist_async_min_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/dist/async.min.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="1"
+              data-bugs="19.73"
+              data-complexity="253"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_index_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/index.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="3"
+              data-bugs="0.01"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_karma_conf_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/karma.conf.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="30"
+              data-bugs="0.12"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_apply_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/apply.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="48"
+              data-bugs="0.02"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_applyEach_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/applyEach.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="42"
+              data-bugs="0.01"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_applyEachSeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/applyEachSeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="23"
+              data-bugs="0.01"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_asyncify_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/asyncify.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="7"
+              data-sloc="100"
+              data-bugs="0.27"
+              data-complexity="6"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_auto_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/auto.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="9"
+              data-sloc="255"
+              data-bugs="1.20"
+              data-complexity="27"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_autoInject_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/autoInject.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="5"
+              data-sloc="147"
+              data-bugs="0.56"
+              data-complexity="13"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_cargo_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/cargo.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="82"
+              data-bugs="0.02"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_cargoQueue_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/cargoQueue.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="59"
+              data-bugs="0.02"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_compose_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/compose.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="43"
+              data-bugs="0.02"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_concat_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/concat.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="33"
+              data-bugs="0.04"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_concatLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/concatLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="43"
+              data-bugs="0.17"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_concatSeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/concatSeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="27"
+              data-bugs="0.04"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_constant_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/constant.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="48"
+              data-bugs="0.03"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_detect_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/detect.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="4"
+              data-sloc="44"
+              data-bugs="0.06"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_detectLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/detectLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="4"
+              data-sloc="31"
+              data-bugs="0.06"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_detectSeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/detectSeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="5"
+              data-sloc="30"
+              data-bugs="0.06"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_dir_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/dir.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="32"
+              data-bugs="0.01"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_doUntil_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/doUntil.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="31"
+              data-bugs="0.08"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_doWhilst_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/doWhilst.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="4"
+              data-sloc="51"
+              data-bugs="0.17"
+              data-complexity="6"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_each_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/each.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="68"
+              data-bugs="0.05"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_eachLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/eachLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="30"
+              data-bugs="0.06"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_eachOf_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/eachOf.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="4"
+              data-sloc="87"
+              data-bugs="0.29"
+              data-complexity="9"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_eachOfLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/eachOfLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="30"
+              data-bugs="0.05"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_eachOfSeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/eachOfSeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="25"
+              data-bugs="0.04"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_eachSeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/eachSeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="30"
+              data-bugs="0.04"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_ensureAsync_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/ensureAsync.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="54"
+              data-bugs="0.11"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_every_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/every.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="37"
+              data-bugs="0.06"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_everyLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/everyLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="29"
+              data-bugs="0.06"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_everySeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/everySeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="28"
+              data-bugs="0.06"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_filter_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/filter.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="36"
+              data-bugs="0.04"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_filterLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/filterLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="28"
+              data-bugs="0.05"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_filterSeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/filterSeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="26"
+              data-bugs="0.04"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_forever_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/forever.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="48"
+              data-bugs="0.10"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_groupBy_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/groupBy.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="42"
+              data-bugs="0.02"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_groupByLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/groupByLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="54"
+              data-bugs="0.24"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_groupBySeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/groupBySeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="24"
+              data-bugs="0.02"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_index_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/index.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="351"
+              data-bugs="1.90"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_DoublyLinkedList_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/DoublyLinkedList.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="5"
+              data-sloc="91"
+              data-bugs="0.61"
+              data-complexity="13"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_Heap_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/Heap.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="114"
+              data-bugs="0.85"
+              data-complexity="12"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_applyEach_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/applyEach.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="17"
+              data-bugs="0.11"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_asyncEachOfLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/asyncEachOfLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="24"
+              data-sloc="63"
+              data-bugs="0.30"
+              data-complexity="15"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_awaitify_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/awaitify.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="9"
+              data-sloc="24"
+              data-bugs="0.17"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_breakLoop_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/breakLoop.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="4"
+              data-bugs="0.01"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_consoleFunc_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/consoleFunc.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="15"
+              data-bugs="0.09"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_createTester_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/createTester.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="25"
+              data-bugs="0.17"
+              data-complexity="7"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_eachOfLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/eachOfLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="7"
+              data-sloc="70"
+              data-bugs="0.42"
+              data-complexity="16"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_filter_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/filter.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="43"
+              data-bugs="0.36"
+              data-complexity="8"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_getIterator_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/getIterator.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="3"
+              data-bugs="0.02"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_initialParams_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/initialParams.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="6"
+              data-bugs="0.03"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_isArrayLike_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/isArrayLike.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="6"
+              data-bugs="0.04"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_iterator_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/iterator.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="40"
+              data-bugs="0.28"
+              data-complexity="7"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_map_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/map.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="18"
+              data-bugs="0.11"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_once_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/once.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="10"
+              data-bugs="0.05"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_onlyOnce_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/onlyOnce.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="8"
+              data-bugs="0.05"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_parallel_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/parallel.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="17"
+              data-bugs="0.12"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_promiseCallback_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/promiseCallback.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="9"
+              data-sloc="19"
+              data-bugs="0.09"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_queue_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/queue.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="172"
+              data-bugs="1.22"
+              data-complexity="27"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_range_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/range.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="7"
+              data-bugs="0.03"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_reject_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/reject.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="11"
+              data-bugs="0.07"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_setImmediate_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/setImmediate.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="6"
+              data-sloc="24"
+              data-bugs="0.13"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_withoutIndex_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/withoutIndex.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="3"
+              data-bugs="0.02"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_internal_wrapAsync_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/internal/wrapAsync.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="22"
+              data-bugs="0.12"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_log_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/log.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="30"
+              data-bugs="0.01"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_map_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/map.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="45"
+              data-bugs="0.04"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_mapLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/mapLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="28"
+              data-bugs="0.05"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_mapSeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/mapSeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="27"
+              data-bugs="0.04"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_mapValues_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/mapValues.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="50"
+              data-bugs="0.02"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_mapValuesLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/mapValuesLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="4"
+              data-sloc="41"
+              data-bugs="0.14"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_mapValuesSeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/mapValuesSeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="25"
+              data-bugs="0.02"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_memoize_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/memoize.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="73"
+              data-bugs="0.29"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_nextTick_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/nextTick.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="46"
+              data-bugs="0.06"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_parallel_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/parallel.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="76"
+              data-bugs="0.03"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_parallelLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/parallelLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="26"
+              data-bugs="0.03"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_priorityQueue_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/priorityQueue.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="65"
+              data-bugs="0.26"
+              data-complexity="6"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_queue_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/queue.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="131"
+              data-bugs="0.05"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_race_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/race.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="50"
+              data-bugs="0.12"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_reduce_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/reduce.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="57"
+              data-bugs="0.11"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_reduceRight_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/reduceRight.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="29"
+              data-bugs="0.04"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_reflect_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/reflect.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="63"
+              data-bugs="0.14"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_reflectAll_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/reflectAll.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="81"
+              data-bugs="0.08"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_reject_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/reject.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="36"
+              data-bugs="0.04"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_rejectLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/rejectLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="27"
+              data-bugs="0.05"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_rejectSeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/rejectSeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="26"
+              data-bugs="0.04"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_retry_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/retry.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="150"
+              data-bugs="0.47"
+              data-complexity="18"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_retryable_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/retryable.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="5"
+              data-sloc="59"
+              data-bugs="0.22"
+              data-complexity="8"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_seq_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/seq.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="64"
+              data-bugs="0.19"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_series_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/series.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="71"
+              data-bugs="0.03"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_setImmediate_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/setImmediate.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="34"
+              data-bugs="0.01"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_some_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/some.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="39"
+              data-bugs="0.05"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_someLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/someLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="30"
+              data-bugs="0.06"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_someSeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/someSeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="29"
+              data-bugs="0.05"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_sortBy_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/sortBy.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="70"
+              data-bugs="0.20"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_timeout_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/timeout.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="74"
+              data-bugs="0.18"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_times_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/times.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="38"
+              data-bugs="0.02"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_timesLimit_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/timesLimit.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="25"
+              data-bugs="0.05"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_timesSeries_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/timesSeries.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="20"
+              data-bugs="0.02"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_transform_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/transform.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="62"
+              data-bugs="0.17"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_tryEach_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/tryEach.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="2"
+              data-sloc="61"
+              data-bugs="0.14"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_unmemoize_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/unmemoize.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="18"
+              data-bugs="0.02"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_until_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/until.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="44"
+              data-bugs="0.06"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_waterfall_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/waterfall.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="86"
+              data-bugs="0.19"
+              data-complexity="6"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_lib_whilst_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/lib/whilst.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="61"
+              data-bugs="0.17"
+              data-complexity="6"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_perf_benchmark_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/perf/benchmark.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="15"
+              data-sloc="224"
+              data-bugs="2.49"
+              data-complexity="17"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_perf_memory_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/perf/memory.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="3"
+              data-sloc="44"
+              data-bugs="0.26"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_perf_suites_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/perf/suites.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="446"
+              data-bugs="2.76"
+              data-complexity="6"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_build_aggregate_bundle_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/build/aggregate-bundle.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="5"
+              data-sloc="15"
+              data-bugs="0.08"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_build_compile_module_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/build/compile-module.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="15"
+              data-sloc="32"
+              data-bugs="0.19"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_build_test_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/build.test.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="25"
+              data-sloc="96"
+              data-bugs="0.60"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_es_test_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/es.test.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="5"
+              data-sloc="34"
+              data-bugs="0.26"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_generate_index_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/generate-index.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="79"
+              data-bugs="0.66"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_index_template_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/index-template.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="80"
+              data-bugs="0.00"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_jsdoc_jsdoc_custom_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/jsdoc/jsdoc-custom.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="6"
+              data-sloc="129"
+              data-bugs="1.07"
+              data-complexity="12"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_jsdoc_jsdoc_fix_html_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/jsdoc/jsdoc-fix-html.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="17"
+              data-sloc="207"
+              data-bugs="2.33"
+              data-complexity="12"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_jsdoc_jsdoc_import_path_plugin_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/jsdoc/jsdoc-import-path-plugin.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="5"
+              data-sloc="21"
+              data-bugs="0.12"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_jsdoc_theme_publish_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/jsdoc/theme/publish.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="15"
+              data-sloc="713"
+              data-bugs="7.66"
+              data-complexity="94"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_jsdoc_theme_static_scripts_linenumber_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/jsdoc/theme/static/scripts/linenumber.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="25"
+              data-bugs="0.15"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_jsdoc_theme_static_scripts_prettify_lang_css_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/jsdoc/theme/static/scripts/prettify/lang-css.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="2"
+              data-bugs="0.10"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_jsdoc_theme_static_scripts_prettify_prettify_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/jsdoc/theme/static/scripts/prettify/prettify.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="28"
+              data-bugs="9.64"
+              data-complexity="182"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_sync_cjs_package_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/sync-cjs-package.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="0"
+              data-sloc="8"
+              data-bugs="0.06"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_support_sync_es_package_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/support/sync-es-package.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="1"
+              data-sloc="11"
+              data-bugs="0.09"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_apply_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/apply.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="5"
+              data-sloc="21"
+              data-bugs="0.20"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_applyEach_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/applyEach.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="28"
+              data-sloc="152"
+              data-bugs="1.19"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_asyncFunctions_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/asyncFunctions.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="4"
+              data-sloc="42"
+              data-bugs="0.16"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_asyncify_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/asyncify.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="41"
+              data-sloc="186"
+              data-bugs="1.38"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_auto_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/auto.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="492"
+              data-bugs="3.75"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_autoInject_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/autoInject.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="47"
+              data-sloc="151"
+              data-bugs="1.23"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_cargo_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/cargo.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="47"
+              data-sloc="317"
+              data-bugs="2.91"
+              data-complexity="6"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_cargoQueue_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/cargoQueue.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="333"
+              data-bugs="3.14"
+              data-complexity="7"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_compose_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/compose.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="25"
+              data-sloc="111"
+              data-bugs="0.86"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_concat_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/concat.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="466"
+              data-bugs="4.92"
+              data-complexity="14"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_consoleFunctions_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/consoleFunctions.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="9"
+              data-sloc="70"
+              data-bugs="0.58"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_constant_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/constant.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="6"
+              data-sloc="28"
+              data-bugs="0.24"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_detect_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/detect.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="235"
+              data-bugs="2.35"
+              data-complexity="6"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_each_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/each.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="341"
+              data-bugs="2.86"
+              data-complexity="14"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_eachOf_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/eachOf.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="513"
+              data-bugs="5.45"
+              data-complexity="34"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_ensureAsync_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/ensureAsync.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="16"
+              data-sloc="85"
+              data-bugs="0.73"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_es2017_asyncFunctions_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/es2017/asyncFunctions.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="685"
+              data-bugs="6.52"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_es2017_asyncGenerators_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/es2017/asyncGenerators.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="85"
+              data-bugs="0.54"
+              data-complexity="7"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_es2017_awaitableFunctions_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/es2017/awaitableFunctions.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="38"
+              data-sloc="579"
+              data-bugs="9.90"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_every_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/every.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="181"
+              data-bugs="1.66"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_filter_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/filter.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="302"
+              data-bugs="2.75"
+              data-complexity="9"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_forever_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/forever.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="21"
+              data-sloc="55"
+              data-bugs="0.33"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_groupBy_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/groupBy.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="412"
+              data-bugs="4.31"
+              data-complexity="12"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_heap_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/heap.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="17"
+              data-sloc="124"
+              data-bugs="1.40"
+              data-complexity="7"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_linked_list_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/linked_list.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="16"
+              data-sloc="83"
+              data-bugs="0.64"
+              data-complexity="7"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_map_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/map.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="362"
+              data-bugs="3.65"
+              data-complexity="12"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_mapValues_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/mapValues.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="34"
+              data-sloc="152"
+              data-bugs="1.26"
+              data-complexity="5"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_memoize_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/memoize.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="46"
+              data-sloc="224"
+              data-bugs="1.95"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_nextTick_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/nextTick.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="10"
+              data-sloc="33"
+              data-bugs="0.23"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_parallel_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/parallel.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="410"
+              data-bugs="2.91"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_priorityQueue_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/priorityQueue.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="45"
+              data-sloc="278"
+              data-bugs="3.00"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_queue_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/queue.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="821"
+              data-bugs="8.37"
+              data-complexity="10"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_race_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/race.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="12"
+              data-sloc="69"
+              data-bugs="0.55"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_reduce_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/reduce.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="28"
+              data-sloc="96"
+              data-bugs="0.86"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_retry_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/retry.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="48"
+              data-sloc="278"
+              data-bugs="2.68"
+              data-complexity="9"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_retryable_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/retryable.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="21"
+              data-sloc="100"
+              data-bugs="0.81"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_seq_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/seq.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="22"
+              data-sloc="133"
+              data-bugs="1.06"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_series_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/series.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="40"
+              data-sloc="214"
+              data-bugs="1.51"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_setImmediate_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/setImmediate.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="7"
+              data-sloc="24"
+              data-bugs="0.15"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_some_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/some.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="51"
+              data-sloc="199"
+              data-bugs="1.75"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_sortBy_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/sortBy.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="18"
+              data-sloc="54"
+              data-bugs="0.55"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_support_get_function_object_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/support/get_function_object.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="6"
+              data-sloc="22"
+              data-bugs="0.08"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_timeout_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/timeout.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="29"
+              data-sloc="108"
+              data-bugs="0.83"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_times_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/times.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="42"
+              data-sloc="148"
+              data-bugs="1.14"
+              data-complexity="7"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_transform_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/transform.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="22"
+              data-sloc="81"
+              data-bugs="0.63"
+              data-complexity="2"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_tryEach_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/tryEach.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="18"
+              data-sloc="104"
+              data-bugs="0.73"
+              data-complexity="1"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_until_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/until.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="34"
+              data-sloc="127"
+              data-bugs="1.01"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_waterfall_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/waterfall.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="39"
+              data-sloc="193"
+              data-bugs="1.39"
+              data-complexity="3"
+          ></span>
+        </div>
+      </li>
+      
+      <li class="col-md-12">
+        <div class="row">
+          <span class="fade-left fadeout visible-large"></span>
+          <span class="col-md-4 file"><a class="file-link" href="./files/_Users_suvodeepmajumder_Documents_AI4SE_r2c_plato_temp_repo_async_test_whilst_js/index.html">/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/whilst.js</a></span>
+        <span class="col-md-8 file-chart js-file-chart"
+              data-lint="43"
+              data-sloc="175"
+              data-bugs="1.30"
+              data-complexity="4"
+          ></span>
+        </div>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/javascript" src="assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="assets/scripts/plato-overview.js"></script>
+<script type="text/javascript" src="assets/scripts/plato-sortable-file-list.js"></script>
+</body>
+</html>

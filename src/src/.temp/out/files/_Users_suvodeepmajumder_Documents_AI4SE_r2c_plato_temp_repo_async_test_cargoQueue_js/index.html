@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - /Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/cargoQueue.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>/Users/suvodeepmajumder/Documents/AI4SE/r2c_plato/temp_repo/async/test/cargoQueue.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">77.61</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">333</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">56.15</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">3.14</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">var async = require(&#039;../lib&#039;);
+var {expect} = require(&#039;chai&#039;);
+var assert = require(&#039;assert&#039;);
+
+describe(&#039;cargoQueue&#039;, () =&gt; {
+
+    function worker (tasks, callback) {
+        this.call_order.push(&#039;process &#039; + tasks.join(&#039; &#039;));
+        callback(&#039;error&#039;, &#039;arg&#039;);
+    }
+
+    it(&#039;cargoQueue&#039;, (done) =&gt; {
+        var call_order = [],
+            delays = [40, 40, 20];
+
+        // worker: --12--34--5-
+        // order of completion: 1,2,3,4,5
+
+        var c = async.cargoQueue((tasks, callback) =&gt; {
+            setTimeout(() =&gt; {
+                call_order.push(&#039;process &#039; + tasks.join(&#039; &#039;));
+                callback(&#039;error&#039;, &#039;arg&#039;);
+            }, delays.shift());
+        }, 2, 2);
+
+        c.push(1, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            expect(c.length()).to.equal(2);
+            call_order.push(&#039;callback &#039; + 1);
+        });
+        c.push(2, (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            expect(arg).to.equal(&#039;arg&#039;);
+            expect(c.length()).to.equal(2);
+            call_order.push(&#039;callback &#039; + 2);
+        });
+
+        expect(c.length()).to.equal(2);
+
+        // async push
+        setTimeout(() =&gt; {
+            c.push(3, (err, arg) =&gt; {
+                expect(err).to.equal(&#039;error&#039;);
+                expect(arg).to.equal(&#039;arg&#039;);
+                expect(c.length()).to.equal(0);
+                call_order.push(&#039;callback &#039; + 3);
+            });
+        }, 15);
+        setTimeout(() =&gt; {
+            c.push(4, (err, arg) =&gt; {
+                expect(err).to.equal(&#039;error&#039;);
+                expect(arg).to.equal(&#039;arg&#039;);
+                expect(c.length()).to.equal(0);
+                call_order.push(&#039;callback &#039; + 4);
+            });
+            expect(c.length()).to.equal(1);
+            c.push(5, (err, arg) =&gt; {
+                expect(err).to.equal(&#039;error&#039;);
+                expect(arg).to.equal(&#039;arg&#039;);
+                expect(c.length()).to.equal(0);
+                call_order.push(&#039;callback &#039; + 5);
+            });
+        }, 30);
+
+
+        c.drain = function () {
+            expect(call_order).to.eql([
+                &#039;process 1 2&#039;, &#039;callback 1&#039;, &#039;callback 2&#039;,
+                &#039;process 3&#039;, &#039;callback 3&#039;,
+                &#039;process 4 5&#039;, &#039;callback 4&#039;, &#039;callback 5&#039;
+            ]);
+            expect(c.length()).to.equal(0);
+            done();
+        };
+    });
+
+    it(&#039;without callback&#039;, (done) =&gt; {
+        var call_order = [];
+        var c = async.cargoQueue(worker.bind({ call_order }), 2, 2);
+        c.push(1);
+        setImmediate(() =&gt; {
+            c.push(2);
+            setImmediate(() =&gt; {
+                c.push(3);
+                c.push(4);
+                setImmediate(() =&gt; {
+                    c.push(5);
+                    c.drain = function complete () {
+                        expect(call_order).to.eql([
+                            &#039;process 1&#039;,
+                            &#039;process 2&#039;,
+                            &#039;process 3 4&#039;,
+                            &#039;process 5&#039;
+                        ]);
+                        done();
+                    }
+                })
+            })
+        })
+    });
+
+    it(&#039;bulk task&#039;, (done) =&gt; {
+        var call_order = [],
+            delays = [20,30];
+
+        // worker: -123-4-
+        // order of completion: 1,2,3,4
+
+        var c = async.cargoQueue((tasks, callback) =&gt; {
+            setTimeout(() =&gt; {
+                call_order.push(&#039;process &#039; + tasks.join(&#039; &#039;));
+                callback(&#039;error&#039;, tasks.join(&#039; &#039;));
+            }, delays.shift());
+        }, 3, 2);
+
+        c.push( [1,2,3,4], (err, arg) =&gt; {
+            expect(err).to.equal(&#039;error&#039;);
+            call_order.push(&#039;callback &#039; + arg);
+        });
+
+        expect(c.length()).to.equal(4);
+
+        setTimeout(() =&gt; {
+            expect(call_order).to.eql([
+                &#039;process 1 2&#039;, &#039;callback 1 2&#039;, &#039;callback 1 2&#039;,
+                &#039;process 3 4&#039;, &#039;callback 3 4&#039;, &#039;callback 3 4&#039;,
+            ]);
+            expect(c.length()).to.equal(0);
+            done();
+        }, 200);
+    });
+
+    it(&#039;drain once&#039;, (done) =&gt; {
+
+        var c = async.cargoQueue((tasks, callback) =&gt; {
+            callback();
+        }, 3, 2);
+
+        var drainCounter = 0;
+        c.drain = function () {
+            drainCounter++;
+        };
+
+        for(var i = 0; i &lt; 10; i++){
+            c.push(i);
+        }
+
+        setTimeout(() =&gt; {
+            expect(drainCounter).to.equal(1);
+            done();
+        }, 50);
+    });
+
+    it(&#039;drain twice&#039;, (done) =&gt; {
+
+        var c = async.cargoQueue((tasks, callback) =&gt; {
+            callback();
+        }, 3, 2);
+
+        function loadCargo(){
+            for(var i = 0; i &lt; 10; i++){
+                c.push(i);
+            }
+        }
+
+        var drainCounter = 0;
+        c.drain = function () {
+            drainCounter++;
+        };
+
+        loadCargo();
+        setTimeout(loadCargo, 50);
+
+        setTimeout(() =&gt; {
+            expect(drainCounter).to.equal(2);
+            done();
+        }, 100);
+    });
+
+    it(&#039;events&#039;, (done) =&gt; {
+        var calls = [];
+        var q = async.cargoQueue((task, cb) =&gt; {
+            // nop
+            calls.push(&#039;process &#039; + task);
+            async.setImmediate(cb);
+        }, 3, 1);
+
+        q.saturated = function() {
+            assert(q.running() == 3, &#039;cargoQueue should be saturated now&#039;);
+            calls.push(&#039;saturated&#039;);
+        };
+        q.empty = function() {
+            assert(q.length() === 0, &#039;cargoQueue should be empty now&#039;);
+            calls.push(&#039;empty&#039;);
+        };
+        q.drain = function() {
+            assert(
+                q.length() === 0 &amp;&amp; q.running() === 0,
+                &#039;cargoQueue should be empty now and no more workers should be running&#039;
+            );
+            calls.push(&#039;drain&#039;);
+            expect(calls).to.eql([
+                &#039;process foo&#039;,
+                &#039;process bar&#039;,
+                &#039;saturated&#039;,
+                &#039;process zoo&#039;,
+                &#039;foo cb&#039;,
+                &#039;saturated&#039;,
+                &#039;process poo&#039;,
+                &#039;bar cb&#039;,
+                &#039;empty&#039;,
+                &#039;saturated&#039;,
+                &#039;process moo&#039;,
+                &#039;zoo cb&#039;,
+                &#039;poo cb&#039;,
+                &#039;moo cb&#039;,
+                &#039;drain&#039;
+            ]);
+            done();
+        };
+        q.push(&#039;foo&#039;, () =&gt; {calls.push(&#039;foo cb&#039;);});
+        q.push(&#039;bar&#039;, () =&gt; {calls.push(&#039;bar cb&#039;);});
+        q.push(&#039;zoo&#039;, () =&gt; {calls.push(&#039;zoo cb&#039;);});
+        q.push(&#039;poo&#039;, () =&gt; {calls.push(&#039;poo cb&#039;);});
+        q.push(&#039;moo&#039;, () =&gt; {calls.push(&#039;moo cb&#039;);});
+    });
+
+    it(&#039;expose payload&#039;, (done) =&gt; {
+        var called_once = false;
+        var cargo = async.cargoQueue((tasks, cb) =&gt; {
+            if (!called_once) {
+                expect(cargo.payload).to.equal(1);
+                assert(tasks.length === 1, &#039;should start with payload = 1&#039;);
+            } else {
+                expect(cargo.payload).to.equal(2);
+                assert(tasks.length === 2, &#039;next call shold have payload = 2&#039;);
+            }
+            called_once = true;
+            setTimeout(cb, 25);
+        }, 1, 1);
+
+        cargo.drain = function () {
+            done();
+        };
+
+        expect(cargo.payload).to.equal(1);
+
+        cargo.push([1, 2, 3]);
+
+        setTimeout(() =&gt; {
+            cargo.payload = 2;
+        }, 15);
+    });
+
+
+    it(&#039;expose concurrency&#039;, (done) =&gt; {
+        var called_once = false;
+        var cargo = async.cargoQueue((tasks, cb) =&gt; {
+            if (!called_once) {
+                expect(cargo.concurrency).to.equal(1);
+            } else {
+                expect(cargo.concurrency).to.equal(2);
+            }
+            called_once = true;
+            setTimeout(cb, 25);
+        }, 1, 1);
+
+        cargo.drain = function () {
+            done();
+        };
+
+        expect(cargo.concurrency).to.equal(1);
+
+        cargo.push([1, 2, 3]);
+
+        setTimeout(() =&gt; {
+            cargo.concurrency = 2;
+        }, 15);
+    });
+
+    it(&#039;workersList&#039;, (done) =&gt; {
+        var called_once = false;
+
+        function getWorkersListData(cargo) {
+            return cargo.workersList().map((v) =&gt; {
+                return v.data;
+            });
+        }
+
+        var cargo = async.cargoQueue((tasks, cb) =&gt; {
+            if (!called_once) {
+                expect(tasks).to.eql([&#039;foo&#039;, &#039;bar&#039;]);
+            } else {
+                expect(tasks).to.eql([&#039;baz&#039;]);
+            }
+            expect(getWorkersListData(cargo)).to.eql(tasks);
+            async.setImmediate(() =&gt; {
+                // ensure nothing has changed
+                expect(getWorkersListData(cargo)).to.eql(tasks);
+                called_once = true;
+                cb();
+            });
+        }, 1, 2);
+
+        cargo.drain = function() {
+            expect(cargo.workersList()).to.eql([]);
+            expect(cargo.running()).to.equal(0);
+            done();
+        };
+
+        cargo.push(&#039;foo&#039;);
+        cargo.push(&#039;bar&#039;);
+        cargo.push(&#039;baz&#039;);
+    });
+
+    it(&#039;running&#039;, (done) =&gt; {
+        var cargo = async.cargoQueue((tasks, cb) =&gt; {
+            expect(cargo.running()).to.equal(1);
+            async.setImmediate(() =&gt; {
+                expect(cargo.running()).to.equal(1);
+                cb();
+            });
+        }, 1, 1);
+
+        cargo.drain = function() {
+            expect(cargo.running()).to.equal(0);
+            done();
+        };
+
+        cargo.push([&#039;foo&#039;, &#039;bar&#039;, &#039;baz&#039;, &#039;boo&#039;]);
+    })
+});</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
